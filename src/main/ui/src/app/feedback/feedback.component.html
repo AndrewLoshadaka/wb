@@ -1,0 +1,34 @@
+<mat-card>
+  <!--  <mat-card-content>{{feedback.text}}</mat-card-content>-->
+  <mat-card>
+    <mat-card-header>
+      <!--      <div mat-card-avatar class="example-header-image"></div>-->
+      <mat-card-title>Продукт: {{feedback.productDetails.productName}}</mat-card-title>
+      <mat-card-subtitle>Артикул: {{feedback.productDetails.nmId}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      Отзыв:
+      <p style="font-weight: bold;">
+        {{feedback.text}}
+      </p>
+      <div *ngIf="feedback.photoLinks?.length > 0">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Photos
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+
+          <div *ngFor="let img of feedback.photoLinks">
+            <img mat-card-lg-image src="{{img.fullSize}}">
+          </div>
+      </mat-expansion-panel>
+      </div>
+
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button (click)="openDialog()">Оставить отзыв</button>
+    </mat-card-actions>
+  </mat-card>
+</mat-card>

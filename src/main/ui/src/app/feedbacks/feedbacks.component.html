@@ -1,0 +1,40 @@
+<div class="container">
+  <h2>Отзывы</h2>
+  <p>
+    <span>Количество звезд в отзыве</span>
+    <mat-button-toggle-group [(ngModel)]="stars" aria-label="Stars count" [(value)]="stars"
+                             (click)="reloadFeedbacks()">
+      <mat-button-toggle value="5">5</mat-button-toggle>
+      <mat-button-toggle value="4">4</mat-button-toggle>
+      <mat-button-toggle value="3">3</mat-button-toggle>
+      <mat-button-toggle value="2">2</mat-button-toggle>
+      <mat-button-toggle value="1">1</mat-button-toggle>
+    </mat-button-toggle-group>
+  </p>
+  <p>
+    <span>С фото или без</span>
+    <mat-button-toggle-group [(ngModel)]="photos" aria-label="Photos" [(value)]="photos"
+                             (click)="reloadFeedbacks()">
+      <mat-button-toggle value="true">С фото</mat-button-toggle>
+      <mat-button-toggle value="false">Без фото</mat-button-toggle>
+    </mat-button-toggle-group>
+  </p>
+  <div *ngIf="allFeedbacks.length === 0">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div *ngIf="allFeedbacks.length !== 0">
+    <p>Общее количество отзывов без ответа {{getFeedbacksCount()}}</p>
+    <mat-paginator class="mat-paginator"
+      (page)="handlePageEvent($event)"
+      [length]="allFeedbacks.length"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[25, 50, 100]"
+      aria-label="Select page">
+    </mat-paginator>
+    <div *ngFor="let feedback of currentFeedbacks">
+      <app-feedback [feedback]="feedback"></app-feedback>
+      <br>
+    </div>
+  </div>
+</div>

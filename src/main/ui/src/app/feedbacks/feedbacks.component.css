@@ -1,0 +1,8 @@
+mat-button-toggle-group {
+  margin-left: 12px;
+  height: 2rem;
+  align-items: center;
+}
+.mat-paginator {
+  display: flex;
+}
