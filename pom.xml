@@ -2,6 +2,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -10,11 +22,11 @@
     </parent>
     <groupId>com.kickers</groupId>
     <artifactId>reviews</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <name>reviews</name>
     <description>Application for operations with reviews for Kickers</description>
     <properties>
-        <java.version>17</java.version>
+        <java.version>19</java.version>
     </properties>
     <distributionManagement>
         <repository>
@@ -49,11 +61,16 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>com.mysql</groupId>-->
-        <!--            <artifactId>mysql-connector-j</artifactId>-->
-        <!--            <scope>runtime</scope>-->
-        <!--        </dependency>-->
+
+
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
+        </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -99,10 +116,10 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${basedir}/target/classes/static</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/resources/</outputDirectory >
                                     <resources>
                                         <resource>
-                                            <directory>src/main/ui/build</directory>
+                                            <directory>src/main/ui/dist/ui/</directory>
                                         </resource>
                                     </resources>
                                 </configuration>

@@ -3,6 +3,10 @@ package com.kickers.api;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.net.URI;
+import java.net.URL;
 
 @Getter
 @NoArgsConstructor
@@ -14,4 +18,9 @@ public class ProductDetails {
     private String supplierArticle;
     private String supplierName;
     private String brandName;
+
+    @Setter
+    private String photoLink;
+    @Setter
+    private String wbUrl;
 }

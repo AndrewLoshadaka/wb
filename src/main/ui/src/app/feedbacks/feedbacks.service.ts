@@ -10,7 +10,7 @@ export class FeedbacksService {
 
   rootURL = '/api';
 
-  getFeedbacks(stars: string, photos: string) {
-    return this.http.get(this.rootURL + '/feedbacks?stars=' + stars + '&photos=' + photos);
+  getFeedbacks(stars: string, photos: string, name: string) {
+    return this.http.get(this.rootURL + '/feedbacks?stars=' + stars + '&photos=' + photos + '&name=' + name);
   }
 }

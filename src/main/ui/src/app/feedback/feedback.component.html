@@ -5,6 +5,14 @@
       <!--      <div mat-card-avatar class="example-header-image"></div>-->
       <mat-card-title>Продукт: {{feedback.productDetails.productName}}</mat-card-title>
       <mat-card-subtitle>Артикул: {{feedback.productDetails.nmId}}</mat-card-subtitle>
+      <mat-card-subtitle>Бренд: {{feedback.productDetails.brandName}}</mat-card-subtitle>
+      <mat-card-subtitle>Оценка: {{feedback.productValuation}}</mat-card-subtitle>
+      <mat-card-subtitle>
+        <a href="{{feedback.productDetails.wbUrl}}" target="_blank">Товар на WB</a>
+      </mat-card-subtitle>
+      <img mat-card-lg-image src="{{feedback.productDetails.photoLink}}" width="246" height="328">
+
+
     </mat-card-header>
     <mat-card-content>
       Отзыв:
@@ -15,14 +23,14 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Photos
+            Фото
           </mat-panel-title>
         </mat-expansion-panel-header>
 
 
-          <div *ngFor="let img of feedback.photoLinks">
+          <span *ngFor="let img of feedback.photoLinks">
             <img mat-card-lg-image src="{{img.fullSize}}">
-          </div>
+          </span>
       </mat-expansion-panel>
       </div>
 

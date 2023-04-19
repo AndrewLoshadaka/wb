@@ -5,6 +5,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {FeedbackComponent} from './feedback/feedback.component';
 import {FeedbacksComponent} from './feedbacks/feedbacks.component';
+import {StartComponent} from "./start/start.component";
 import {HttpClientModule} from "@angular/common/http";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
@@ -24,6 +25,11 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import { AnswerDialogComponent } from './answer-dialog/answer-dialog.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatDialogModule} from "@angular/material/dialog";
+import {RouterModule, Routes} from "@angular/router";
+
+const appRoutes: Routes = [
+  {path: 'list', component: FeedbacksComponent}
+]
 
 @NgModule({
   declarations: [
@@ -31,8 +37,10 @@ import {MatDialogModule} from "@angular/material/dialog";
     FeedbackComponent,
     FeedbacksComponent,
     AnswerDialogComponent,
+    StartComponent,
   ],
   imports: [
+    RouterModule.forRoot(appRoutes),
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
@@ -58,4 +66,6 @@ import {MatDialogModule} from "@angular/material/dialog";
   providers: [],
   bootstrap: [AppComponent]
 })
+
+
 export class AppModule { }

@@ -12,8 +12,10 @@ export class FeedbacksComponent {
   constructor(private feedbacksService: FeedbacksService) {}
 
   allFeedbacks: any[] = [];
+  name = "АЛ";
   stars = "5";
   photos = "true";
+  video = "true";
   currentFeedbacks: any[] = [];
   pageSize: number = 25;
   pageIndex: number = 0;
@@ -26,7 +28,7 @@ export class FeedbacksComponent {
 
   reloadFeedbacks() {
     this.allFeedbacks = [];
-    this.feedbacksService.getFeedbacks(this.stars, this.photos)
+    this.feedbacksService.getFeedbacks(this.stars, this.photos, this.name)
       .subscribe((v: any) => {
         this.allFeedbacks = v;
         this.pageSize = 25;

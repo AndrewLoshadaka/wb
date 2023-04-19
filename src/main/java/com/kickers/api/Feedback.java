@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -25,9 +26,11 @@ public class Feedback {
 
     private Answer answer;
     private String state;
+    @Setter
     private ProductDetails productDetails;
 
     private List<PhotoLink> photoLinks;
+    private Video video;
     //            "video": null,
     private boolean isCreationSupplierComplaint;
     private boolean wasViewed;
@@ -49,5 +52,13 @@ public class Feedback {
     private static class PhotoLink {
         private String fullSize;
         private String minSize;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class Video {
+        private String uri;
+        private String thumbnailUri;
     }
 }
