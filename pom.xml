@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.kickers</groupId>
     <artifactId>reviews</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <name>reviews</name>
     <description>Application for operations with reviews for Kickers</description>
     <properties>
@@ -99,10 +99,10 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${basedir}/target/classes/static</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/resources/</outputDirectory >
                                     <resources>
                                         <resource>
-                                            <directory>src/main/ui/build</directory>
+                                            <directory>src/main/ui/dist/ui/</directory>
                                         </resource>
                                     </resources>
                                 </configuration>
