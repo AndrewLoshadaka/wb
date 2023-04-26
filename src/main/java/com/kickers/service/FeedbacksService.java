@@ -26,7 +26,7 @@ public class FeedbacksService {
     private String getToken(String supplier){
         try {
             assert connection != null;
-            PreparedStatement statement = connection.prepareStatement("select API_NEW as a from corp where corpname =" + "\'" + supplier + "\'");
+            PreparedStatement statement = connection.prepareStatement("select API_NEW as a from corps where corpname =" + "\'" + supplier + "\'");
             ResultSet result = statement.executeQuery();
             result.next();
             return result.getString("a");
@@ -38,7 +38,7 @@ public class FeedbacksService {
         List<String> list = new ArrayList<>();
         try {
             assert connection != null;
-            PreparedStatement statement = connection.prepareStatement("select corpname as name from corp");
+            PreparedStatement statement = connection.prepareStatement("select corpname as name from corps");
             ResultSet result = statement.executeQuery();
             while (result.next()){
                 list.add(result.getString("name"));

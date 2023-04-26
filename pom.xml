@@ -21,18 +21,18 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.kickers</groupId>
-    <artifactId>reviews</artifactId>
+    <artifactId>wb</artifactId>
     <version>0.0.3-SNAPSHOT</version>
-    <name>reviews</name>
+    <name>wb</name>
     <description>Application for operations with reviews for Kickers</description>
     <properties>
-        <java.version>19</java.version>
+        <java.version>17</java.version>
     </properties>
     <distributionManagement>
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/lukapr/reviews</url>
+            <url>https://maven.pkg.github.com/AndrewLoshadaka/wb</url>
         </repository>
     </distributionManagement>
     <dependencies>
@@ -40,26 +40,15 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
         </dependency>
 
 
@@ -70,11 +59,25 @@
             <version>8.0.33</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.15.0</version>
+        </dependency>
+
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kickers</groupId>
+            <artifactId>reviews</artifactId>
+            <version>0.0.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <dependencyManagement>

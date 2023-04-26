@@ -17,10 +17,10 @@ public class ReviewsApplication {
 		Connection connection = ConnectionDB.getConnection();
 		Statement statement = connection.createStatement();
 
-		PreparedStatement statement1 = connection.prepareStatement("select API_NEW as a from corp where corpname ='АЛ'");
+		PreparedStatement statement1 = connection.prepareStatement("select API_NEW as a from corps where corpname ='АЛ'");
 		System.out.println(statement1);
 
-		ResultSet set = statement.executeQuery("select API_NEW as a from corp where corpname ='АЛ'");
+		ResultSet set = statement.executeQuery("select API_NEW as a from corps where corpname ='АЛ'");
 		set.next();
 
 

@@ -9,9 +9,10 @@ public class ConnectionDB {
 
     public static Connection getConnection() {
         try {
-            String user = "andrew";
-            String password = "1925";
-            String url = "jdbc:mysql://localhost:3306/_schema";
+            String user = "newgen";
+            String password = "OleG2170458";
+            String url = "jdbc:mysql://192.168.208.137:3306/wbstat";
+
             connection = DriverManager.getConnection(url, user, password);
             return connection;
         } catch (SQLException e){
