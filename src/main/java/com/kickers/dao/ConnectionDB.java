@@ -9,9 +9,9 @@ public class ConnectionDB {
 
     public static Connection getConnection() {
         try {
-            String user = "newgen";
-            String password = "OleG2170458";
-            String url = "jdbc:mysql://192.168.208.137:3306/wbstat";
+            String user = "andrew";
+            String password = "1925";
+            String url = "jdbc:mysql://localhost:3306/_schema";
 
             connection = DriverManager.getConnection(url, user, password);
             return connection;
