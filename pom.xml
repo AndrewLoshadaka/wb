@@ -21,9 +21,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.kickers</groupId>
-    <artifactId>reviews</artifactId>
+    <artifactId>wb</artifactId>
     <version>0.0.3-SNAPSHOT</version>
-    <name>reviews</name>
+    <name>wb</name>
     <description>Application for operations with reviews for Kickers</description>
     <properties>
         <java.version>17</java.version>
