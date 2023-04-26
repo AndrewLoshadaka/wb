@@ -34,7 +34,6 @@ public class Feedback {
     //            "video": null,
     private boolean isCreationSupplierComplaint;
     private boolean wasViewed;
-//    private String supplierComplaint;
 
     @Getter
     @NoArgsConstructor
