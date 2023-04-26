@@ -43,7 +43,6 @@ public class Feedback {
         private String text;
         private String state;
         private boolean editable;
-
     }
 
     @Getter
