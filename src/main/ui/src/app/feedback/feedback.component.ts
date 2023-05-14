@@ -12,6 +12,7 @@ import {AnswerDialogComponent} from "../answer-dialog/answer-dialog.component";
 export class FeedbackComponent {
 
   @Input() feedback: any;
+
   checked: boolean = false;
 
   constructor(public dialog: MatDialog) {
