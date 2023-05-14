@@ -26,6 +26,7 @@ public class Feedback {
 
     private Answer answer;
     private String state;
+
     @Setter
     private ProductDetails productDetails;
 

@@ -1,70 +1,96 @@
 <div class="container">
   <br>
   <br>
-  <h2>Отзывы</h2>
-  <p>
-    <span>Поставщик</span>
-    <mat-button-toggle-group [(ngModel)]="name" aria-label="Name count" [(value)]="name">
-      <mat-button-toggle value="АЛ">АЛ</mat-button-toggle>
-      <mat-button-toggle value="ВЛ">ВЛ</mat-button-toggle>
-      <mat-button-toggle value="ИП">ИП</mat-button-toggle>
-      <mat-button-toggle value="ИТ">ИТ</mat-button-toggle>
-      <mat-button-toggle value="ПО">Прялков</mat-button-toggle>
-      <mat-button-toggle value="">не выбрано</mat-button-toggle>
-    </mat-button-toggle-group>
-  </p>
 
   <p>
-    <span>Количество звезд в отзыве</span>
-    <mat-button-toggle-group [(ngModel)]="stars" aria-label="Stars count" [(value)]="stars">
-      <mat-button-toggle value="5">5</mat-button-toggle>
-      <mat-button-toggle value="4">4</mat-button-toggle>
-      <mat-button-toggle value="3">3</mat-button-toggle>
-      <mat-button-toggle value="2">2</mat-button-toggle>
-      <mat-button-toggle value="1">1</mat-button-toggle>
-      <mat-button-toggle value="">не выбрано</mat-button-toggle>
-    </mat-button-toggle-group>
-  </p>
+    <span>Поставщик
+      <mat-button-toggle-group [(ngModel)]="name" aria-label="Name count" [(value)]="name">
+        <mat-button-toggle value="АЛ" (click)="showFilters = false">АЛ</mat-button-toggle>
+        <mat-button-toggle value="ВЛ" (click)="showFilters = false">ВЛ</mat-button-toggle>
+        <mat-button-toggle value="ИП" (click)="showFilters = false">ИП</mat-button-toggle>
+        <mat-button-toggle value="ИТ" (click)="showFilters = false">ИТ</mat-button-toggle>
+        <mat-button-toggle value="ПО" (click)="showFilters = false">Прялков</mat-button-toggle>
+        <mat-button-toggle value="" (click)="showFilters = false">не выбрано</mat-button-toggle>
+      </mat-button-toggle-group>
+        <button mat-raised-button (click)="getBrands()">Загрузить</button>
+         <router-outlet></router-outlet>
+      </span>
+    </p>
 
-  <p>
-    <span>С фото или без</span>
-    <mat-button-toggle-group [(ngModel)]="photos" aria-label="Photos" [(value)]="photos">
-      <mat-button-toggle value="true">С фото</mat-button-toggle>
-      <mat-button-toggle value="false">Без фото</mat-button-toggle>
-      <mat-button-toggle value="">Все</mat-button-toggle>
-    </mat-button-toggle-group>
-  </p>
 
-  <p>
-    <span>С видео или без</span>
-    <mat-button-toggle-group [(ngModel)]="video" aria-label="Photos" [(value)]="video">
-      <mat-button-toggle value="true">С видео</mat-button-toggle>
-      <mat-button-toggle value="false">Без видео</mat-button-toggle>
-      <mat-button-toggle value="">Все</mat-button-toggle>
-    </mat-button-toggle-group>
-  </p>
+<div *ngIf="allBrandName.length !== 0">
+  <div *ngIf="showFilters === true">
 
-  <p>
-    <button mat-raised-button (click)="reloadFeedbacks()">Показать результаты</button>
-  </p>
 
-  <div *ngIf="allFeedbacks.length === 0">
-    <mat-spinner></mat-spinner>
-  </div>
-  <div *ngIf="allFeedbacks.length !== 0">
-    <p>Общее количество отзывов без ответа {{getFeedbacksCount()}}</p>
+    <span>Бренд</span>
+      <mat-button-toggle-group [(ngModel)]="brands" >
+          <mat-button-toggle *ngFor="let brand of allBrandName"
+                             value="{{brand}}">{{brand}}
+            </mat-button-toggle>
+        <mat-button-toggle value="">не выбрано</mat-button-toggle>
+      </mat-button-toggle-group>
 
-    <mat-paginator class="mat-paginator"
-      (page)="handlePageEvent($event)"
-      [length]="allFeedbacks.length"
-      [pageSize]="pageSize"
-      [pageIndex]="pageIndex"
-      [pageSizeOptions]="[25, 50, 100]"
-      aria-label="Select page">
-    </mat-paginator>
-    <div *ngFor="let feedback of currentFeedbacks">
-      <app-feedback [feedback]="feedback"></app-feedback>
-      <br>
+    <p>
+      <span>Количество звезд в отзыве</span>
+      <mat-button-toggle-group [(ngModel)]="stars" aria-label="Stars count" [(value)]="stars">
+        <mat-button-toggle value="5">5</mat-button-toggle>
+        <mat-button-toggle value="4">4</mat-button-toggle>
+        <mat-button-toggle value="3">3</mat-button-toggle>
+        <mat-button-toggle value="2">2</mat-button-toggle>
+        <mat-button-toggle value="1">1</mat-button-toggle>
+        <mat-button-toggle value="">не выбрано</mat-button-toggle>
+      </mat-button-toggle-group>
+    </p>
+
+    <p>
+      <span>С фото или без</span>
+      <mat-button-toggle-group [(ngModel)]="photos" aria-label="Photos" [(value)]="photos">
+        <mat-button-toggle value="true">С фото</mat-button-toggle>
+        <mat-button-toggle value="false">Без фото</mat-button-toggle>
+        <mat-button-toggle value="">Все</mat-button-toggle>
+      </mat-button-toggle-group>
+    </p>
+
+    <p>
+      <span>С видео или без</span>
+      <mat-button-toggle-group [(ngModel)]="video" aria-label="Photos" [(value)]="video">
+        <mat-button-toggle value="true">С видео</mat-button-toggle>
+        <mat-button-toggle value="false">Без видео</mat-button-toggle>
+        <mat-button-toggle value="">Все</mat-button-toggle>
+      </mat-button-toggle-group>
+    </p>
+
+    <p>
+      <button mat-raised-button (click)="reloadFeedbacks()">Показать результаты</button>
+    </p>
+
+    <div *ngIf="showClick === true">
+    <p *ngIf="allFeedbacks.length === 0">
+      <mat-spinner></mat-spinner>
+    </p>
+
+        <div *ngIf="allFeedbacks.length !== 0">
+          <p>Общее количество отзывов без ответа {{getFeedbacksCount()}}</p>
+          <mat-paginator class="mat-paginator"
+                         (page)="handlePageEvent($event)"
+                         [length]="allFeedbacks.length"
+                         [pageSize]="pageSize"
+                         [pageIndex]="pageIndex"
+                         [pageSizeOptions]="[25, 50, 100]"
+                         aria-label="Select page">
+          </mat-paginator>
+
+          <p *ngFor="let feedback of currentFeedbacks">
+            <mat-checkbox (click)="setChoose()">Выбрать</mat-checkbox>
+            <app-feedback [feedback]="feedback"></app-feedback>
+            <br>
+          </p>
+          <button mat-button class="bottom" (click)="sendAnswerOnFeedbacks()">Ответить на отзывы</button>
+          </div>
+      </div>
+
+
     </div>
   </div>
+
 </div>

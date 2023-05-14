@@ -7,7 +7,9 @@ import com.kickers.api.ProductDetails;
 import com.kickers.api.WildberriesApi;
 import com.kickers.dao.ConnectionDB;
 import com.kickers.entity.FeedbackEntity;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -21,6 +23,10 @@ public class FeedbacksService {
     private final Connection connection = ConnectionDB.getConnection();
     private final WildberriesApi wildberriesApi;
     private final ObjectMapper objectMapper;
+    private List<Feedback> feedbacks = new ArrayList<>();
+    private List<Feedback> feedbacksCopy = new ArrayList<>(); //копия для сортировки
+
+    private final State state = new State();
 
 
     private String getToken(String supplier){
@@ -48,16 +54,15 @@ public class FeedbacksService {
         return null;
     }
 
-    public List<Feedback> getFeedbacks(String photos, String stars, String supplier, String video) {
-        List<Feedback> feedbacks;
+    public void getFeedbacks(String name){
         List<FeedbackEntity> feedbackList;
-        if(supplier.equals("")){
+        if(name.equals("")){ //все
             List<String> tokens = new ArrayList<>();
             for(String s : Objects.requireNonNull(getAllCorpName()))
                 tokens.add(getToken(s));
             List<CompletableFuture<List<Feedback>>> futures = new ArrayList<>();
             for (String token : tokens) {
-                futures.add(CompletableFuture.supplyAsync(() -> getFeedbacks(token)));
+                futures.add(CompletableFuture.supplyAsync(() -> getFeedbacksSort(token)));
             }
             feedbackList = futures.stream()
                     .map(CompletableFuture::join)
@@ -77,13 +82,35 @@ public class FeedbacksService {
                             throw new RuntimeException(e);
                         }
                     }).toList();
-
-
         }
+        else
+            feedbacks = getFeedbacksSort(getToken(name)); //по токену
+        feedbacksCopy = feedbacks;
+        System.out.println("size - " + feedbacks.size());
+    }
+
+    public Set<String> getBrandName(String name){
+        Set<String> brandSet = new HashSet<>();
+        getFeedbacks(name);
+        state.setPhotos("p");
+        state.setStars("p");
+        for(Feedback x : feedbacks){
+            brandSet.add(x.getProductDetails().getBrandName());
+        }
+        System.out.println(brandSet.size());
+        return brandSet;
+    }
+
+    public List<Feedback> getFeedbacksSort(String photos, String stars, String supplier, String video, String brand) {
+        //копия списка отзывов для сортировки по фильтрам
+        System.out.println("copy size - " + feedbacksCopy.size());
+        if(state.getStars().equals(stars) && state.getPhotos().equals(photos) && state.getBrand().equals(brand) )
+            return feedbacksCopy;
 
         else {
-            feedbacks = getFeedbacks(Objects.requireNonNull(getToken(supplier)));
-            feedbackList = feedbacks.stream()
+            feedbacksCopy = feedbacks;
+            List<FeedbackEntity> feedbackList;
+            feedbackList = feedbacksCopy.stream()
                     .map(v -> {
                         try {
                             return new FeedbackEntity(v.getId(), objectMapper.writeValueAsString(v));
@@ -91,51 +118,57 @@ public class FeedbacksService {
                             throw new RuntimeException(e);
                         }
                     }).toList();
+
+            if (!stars.equals("")) {
+                feedbacksCopy = feedbackList.stream()
+                        .map(v -> {
+                            try {
+                                return objectMapper.readValue(v.getFeedback(), Feedback.class);
+                            } catch (JsonProcessingException e) {
+                                throw new RuntimeException(e);
+                            }
+                        })
+                        .filter(v -> v.getProductValuation() == Integer.parseInt(stars))
+                        .toList();
+            }
+
+            if (!photos.equals("")) {
+                feedbacksCopy = feedbacksCopy.stream()
+                        .filter(v -> !CollectionUtils.isEmpty(v.getPhotoLinks()) == Boolean.parseBoolean(photos))
+                        .toList();
+            }
+
+            if (!video.equals("")) {
+                feedbacksCopy = feedbacksCopy.stream()
+                        .filter(v -> v.getVideo() != null)
+                        .toList();
+            }
+
+            if(!brand.equals("")){
+                feedbacksCopy = feedbacksCopy.stream()
+                        .filter(v -> v.getProductDetails().getBrandName().equals(brand))
+                        .toList();
+            }
+
+            for (Feedback x : feedbacksCopy) {
+                ProductDetails tempProductDetails = x.getProductDetails();
+                tempProductDetails.setPhotoLink(getPhotoLink(tempProductDetails.getNmId()));
+                tempProductDetails.setWbUrl("https://www.wildberries.ru/catalog/" + tempProductDetails.getNmId() + "/detail.aspx");
+                x.setProductDetails(tempProductDetails);
+            }
+            state.setStars(stars);
+            state.setPhotos(photos);
+            state.setBrand(brand);
+            System.out.println("get list!");
+            return feedbacksCopy;
         }
-
-
-
-        if(!stars.equals("")){
-            feedbacks = feedbackList.stream()
-                    .map(v -> {
-                        try{
-                            return objectMapper.readValue(v.getFeedback(), Feedback.class);
-                        }
-                        catch (JsonProcessingException e){
-                            throw new RuntimeException(e);
-                        }
-                    })
-                    .filter(v -> v.getProductValuation() == Integer.parseInt(stars))
-                    .toList();
-        }
-
-        if(!photos.equals("")){
-            feedbacks = feedbacks.stream()
-                    .filter(v -> !CollectionUtils.isEmpty(v.getPhotoLinks()) == Boolean.parseBoolean(photos))
-                    .toList();
-        }
-
-        if(!video.equals("")){
-            feedbacks = feedbacks.stream()
-                    .filter(v -> v.getVideo() != null)
-                    .toList();
-        }
-
-        for(Feedback x : feedbacks){
-            ProductDetails tempProductDetails = x.getProductDetails();
-            tempProductDetails.setPhotoLink(getPhotoLink(tempProductDetails.getNmId()));
-            tempProductDetails.setWbUrl("https://www.wildberries.ru/catalog/" + tempProductDetails.getNmId() +"/detail.aspx");
-            x.setProductDetails(tempProductDetails);
-        }
-        return feedbacks;
     }
-
 
     private String getPhotoLink(long nmId){
         String nmIdStr = String.valueOf(nmId);
         String result = null;
         if(nmId > 131_200_000)
-            result = "https://basket-10.wb.ru/vol" + nmIdStr.substring(0, 4) + "/part" //https://basket-10.wb.ru/vol176/part/17665/17665257/images/c246x328/1.jpg
+            result = "https://basket-10.wb.ru/vol" + nmIdStr.substring(0, 4) + "/part"
                     + nmIdStr.substring(0, 6) + "/" + nmIdStr + "/images/c246x328/1.jpg";
         else if(nmId > 116_900_000)
             result = "https://basket-09.wb.ru/vol" + nmIdStr.substring(0, 4) + "/part"
@@ -174,8 +207,16 @@ public class FeedbacksService {
         return result;
     }
 
-    private List<Feedback> getFeedbacks(String token) {
+    private List<Feedback> getFeedbacksSort(String token) {
         int unansweredFeedbacksCount = wildberriesApi.getUnansweredFeedbacksCount(token);
         return wildberriesApi.getFeedbacks(token, unansweredFeedbacksCount).getData().getFeedbacks();
+    }
+
+    @Getter
+    @Setter
+    public class State{
+        private String stars;
+        private String photos;
+        private String brand;
     }
 }

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController()
 @RequestMapping("/api/feedbacks")
@@ -15,8 +16,9 @@ public class FeedbackController {
     @GetMapping
     public List<Feedback> getFeedbacks(@RequestParam(value = "photos", defaultValue = "") String photos,
                                        @RequestParam(value = "stars", defaultValue = "") String stars,
+                                       @RequestParam(value = "brand", defaultValue = "") String brand,
                                        @RequestParam(value = "video", defaultValue = "") String video,
                                        @RequestParam(value = "name", defaultValue = "") String supplier) {
-        return service.getFeedbacks(photos, stars, supplier, video);
+        return service.getFeedbacksSort(photos, stars, supplier, video, brand);
     }
 }

@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, Output} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {AnswerDialogComponent} from "../answer-dialog/answer-dialog.component";
 
@@ -7,16 +7,16 @@ import {AnswerDialogComponent} from "../answer-dialog/answer-dialog.component";
   templateUrl: './feedback.component.html',
   styleUrls: ['./feedback.component.css']
 })
+
+
 export class FeedbackComponent {
 
   @Input() feedback: any;
+  checked: boolean = false;
 
   constructor(public dialog: MatDialog) {
   }
 
-  ngOnInit() {
-    console.log(this.feedback)
-  }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(AnswerDialogComponent, {
@@ -28,4 +28,7 @@ export class FeedbackComponent {
     });
   }
 
+  sendAnswerOnFeedbacks() {
+
+  }
 }

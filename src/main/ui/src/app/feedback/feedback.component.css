@@ -1,3 +1,21 @@
 img {
   margin: 0 10px;
 }
+
+.feedbackText{
+  font-weight: bold;
+}
+
+.bottom {
+  font-weight: 100;
+  font-size: 1.5em;
+  text-align: right;
+  position: fixed;
+  width: 100%;
+  color: rgb(34, 33, 33);
+  height: 4rem;
+  left: 0;
+  bottom: 0;
+  min-height: 2em;
+  background-color:rgba(88, 81, 70, 0.005);
+}

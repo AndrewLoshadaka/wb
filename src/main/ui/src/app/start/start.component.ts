@@ -9,10 +9,10 @@ import {Router, RouterModule} from "@angular/router";
   styleUrls: ['./start.component.css']
 })
 
-export class StartComponent {
-  constructor(private router: Router) {
-  }
 
+export class StartComponent {
+  constructor(private router: Router) {}
+  name = "АЛ";
 
   feedbacks() {
     this.router.navigate(['/list']).then(r => {});

@@ -16,7 +16,7 @@
     </mat-card-header>
     <mat-card-content>
       Отзыв:
-      <p style="font-weight: bold;">
+      <p class="feedbackText">
         {{feedback.text}}
       </p>
       <div *ngIf="feedback.photoLinks?.length > 0">
@@ -34,9 +34,11 @@
       </mat-expansion-panel>
       </div>
 
+      <mat-checkbox>Выбрать</mat-checkbox>
     </mat-card-content>
-    <mat-card-actions>
-      <button mat-button (click)="openDialog()">Оставить отзыв</button>
-    </mat-card-actions>
   </mat-card>
 </mat-card>
+
+
+
+

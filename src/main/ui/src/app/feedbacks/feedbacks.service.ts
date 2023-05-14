@@ -10,7 +10,12 @@ export class FeedbacksService {
 
   rootURL = '/api';
 
-  getFeedbacks(stars: string, photos: string, name: string) {
-    return this.http.get(this.rootURL + '/feedbacks?stars=' + stars + '&photos=' + photos + '&name=' + name);
+  getFeedbacks(stars: string, photos: string, name: string, brand: string) {
+    return this.http.get(this.rootURL + '/feedbacks?stars=' + stars + '&photos=' + photos + '&name=' + name + '&brand=' + brand);
+  }
+
+  //отзывы определенного поставщика
+  getBrandName(name: string){
+    return this.http.get(this.rootURL + '/feedback?brandName=' + name);
   }
 }

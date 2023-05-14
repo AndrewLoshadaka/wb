@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {isDevMode, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -26,9 +26,11 @@ import { AnswerDialogComponent } from './answer-dialog/answer-dialog.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatDialogModule} from "@angular/material/dialog";
 import {RouterModule, Routes} from "@angular/router";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 const appRoutes: Routes = [
-  {path: 'list', component: FeedbacksComponent}
+  {path: 'list', component: FeedbacksComponent},
+  //{path: 'list/f', component: FilterComponent}
 ]
 
 @NgModule({
@@ -38,6 +40,7 @@ const appRoutes: Routes = [
     FeedbacksComponent,
     AnswerDialogComponent,
     StartComponent,
+
   ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -61,7 +64,8 @@ const appRoutes: Routes = [
     MatExpansionModule,
     MatPaginatorModule,
     MatFormFieldModule,
-    MatDialogModule
+    MatDialogModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]
