@@ -17,11 +17,13 @@ public class ReviewsApplication {
 		Connection connection = ConnectionDB.getConnection();
 		Statement statement = connection.createStatement();
 
-		PreparedStatement statement1 = connection.prepareStatement("select API_NEW as a from corp where corpname ='АЛ'");
+		PreparedStatement statement1 = connection.prepareStatement("select * from types");
 		System.out.println(statement1);
 
-		ResultSet set = statement.executeQuery("select API_NEW as a from corp where corpname ='АЛ'");
+		ResultSet set = statement.executeQuery("select * from corp");
 		set.next();
+
+		System.out.println(getToken("ВЛ"));
 
 
 		SpringApplication.run(ReviewsApplication.class, args);

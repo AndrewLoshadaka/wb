@@ -3,6 +3,9 @@ mat-button-toggle-group {
   height: 2rem;
   align-items: center;
 }
+
+
+
 .mat-paginator {
   display: flex;
 }

@@ -1,8 +1,8 @@
 <div class="container">
   <span><h2>Меню</h2>
     <span>
-      <button mat-raised-button (click)="feedbacks()">Работа с отзывами</button>
-      <button mat-raised-button (click)="feedbacks()">Список отзывов</button>
+      <mat-button-toggle (click)="feedbacks()">Работа с отзывами</mat-button-toggle>
+      <mat-button-toggle (click)="feedbacks()">Список отзывов</mat-button-toggle>
       <router-outlet></router-outlet>
     </span>
     </span>

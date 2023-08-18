@@ -16,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class FeedbacksService {
     private final WildberriesApi wildberriesApi;
     private final ObjectMapper objectMapper;
     private List<Feedback> feedbacks = new ArrayList<>();
+    private List<Feedback> autoAnswerFeedbacks = new ArrayList<>(); //
     private List<Feedback> feedbacksCopy = new ArrayList<>(); //копия для сортировки
 
     private final State state = new State();
@@ -35,6 +37,7 @@ public class FeedbacksService {
             PreparedStatement statement = connection.prepareStatement("select API_NEW as a from corp where corpname =" + "\'" + supplier + "\'");
             ResultSet result = statement.executeQuery();
             result.next();
+            System.out.println(result.getString("a"));
             return result.getString("a");
         } catch (SQLException e){}
         return null;
@@ -54,8 +57,10 @@ public class FeedbacksService {
         return null;
     }
 
+
     public void getFeedbacks(String name){
         List<FeedbackEntity> feedbackList;
+
         if(name.equals("")){ //все
             List<String> tokens = new ArrayList<>();
             for(String s : Objects.requireNonNull(getAllCorpName()))
@@ -74,19 +79,38 @@ public class FeedbacksService {
                             throw new RuntimeException(e);
                         }
                     }).toList();
-            feedbacks = feedbackList.stream()
+
+            List<Feedback> temp = feedbackList.stream()
                     .map(v -> {
                         try{
                             return objectMapper.readValue(v.getFeedback(), Feedback.class);
                         } catch (JsonProcessingException e){
                             throw new RuntimeException(e);
                         }
-                    }).toList();
+                    })
+                    .toList();
+
+            splitFeedbacks(temp);
+            System.out.println(temp.size() + " " + autoAnswerFeedbacks.size() + " " + feedbacks.size() + " " + (autoAnswerFeedbacks.size() + feedbacks.size()));
         }
-        else
-            feedbacks = getFeedbacksSort(getToken(name)); //по токену
+        else {
+            List<Feedback> temp = getFeedbacksSort(getToken(name));
+            splitFeedbacks(temp);
+            System.out.println(temp.size() + " " + autoAnswerFeedbacks.size() + " " + feedbacks.size() + " " + (autoAnswerFeedbacks.size() + feedbacks.size()));
+        }
+
         feedbacksCopy = feedbacks;
-        System.out.println("size - " + feedbacks.size());
+    }
+
+    private void splitFeedbacks(List<Feedback> temp){
+        autoAnswerFeedbacks = temp.stream()
+                .filter(v -> v.getPhotoLinks() == null)
+                .filter(v -> v.getProductValuation() == 4 || v.getProductValuation() == 5)
+                .filter(v -> v.getText().isEmpty())
+                .toList();
+        feedbacks = temp.stream()
+                .filter(item -> !autoAnswerFeedbacks.contains(item))
+                .toList();
     }
 
     public Set<String> getBrandName(String name){
@@ -97,13 +121,12 @@ public class FeedbacksService {
         for(Feedback x : feedbacks){
             brandSet.add(x.getProductDetails().getBrandName());
         }
-        System.out.println(brandSet.size());
+        System.out.println("size brandset " + brandSet.size());
         return brandSet;
     }
 
     public List<Feedback> getFeedbacksSort(String photos, String stars, String supplier, String video, String brand) {
-        //копия списка отзывов для сортировки по фильтрам
-        System.out.println("copy size - " + feedbacksCopy.size());
+
         if(state.getStars().equals(stars) && state.getPhotos().equals(photos) && state.getBrand().equals(brand) )
             return feedbacksCopy;
 
@@ -167,7 +190,11 @@ public class FeedbacksService {
     private String getPhotoLink(long nmId){
         String nmIdStr = String.valueOf(nmId);
         String result = null;
-        if(nmId > 131_200_000)
+        if(nmId > 160_610_000){
+            result = "https://basket-11.wb.ru/vol" + nmIdStr.substring(0, 4) + "/part"
+                    + nmIdStr.substring(0, 6) + "/" + nmIdStr + "/images/c246x328/1.jpg";
+        }
+        else if(nmId > 131_200_000)
             result = "https://basket-10.wb.ru/vol" + nmIdStr.substring(0, 4) + "/part"
                     + nmIdStr.substring(0, 6) + "/" + nmIdStr + "/images/c246x328/1.jpg";
         else if(nmId > 116_900_000)

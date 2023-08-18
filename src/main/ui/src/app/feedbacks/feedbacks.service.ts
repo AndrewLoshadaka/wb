@@ -16,6 +16,6 @@ export class FeedbacksService {
 
   //отзывы определенного поставщика
   getBrandName(name: string){
-    return this.http.get(this.rootURL + '/feedback?brandName=' + name);
+    return this.http.get(this.rootURL + '/feedback?name=' + name);
   }
 }

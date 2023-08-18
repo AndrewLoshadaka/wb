@@ -10,7 +10,7 @@
       <mat-card-subtitle>
         <a href="{{feedback.productDetails.wbUrl}}" target="_blank">Товар на WB</a>
       </mat-card-subtitle>
-      <img mat-card-lg-image src="{{feedback.productDetails.photoLink}}" width="246" height="328">
+      <img class="mat-card-lg-image" src="{{feedback.productDetails.photoLink}}">
 
 
     </mat-card-header>
@@ -27,15 +27,21 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-
           <span *ngFor="let img of feedback.photoLinks">
-            <img mat-card-lg-image src="{{img.fullSize}}">
+            <div class="image-container">
+            <img class="mat-card-lg-image1"
+                 [src]="img.fullSize"
+                 (mouseover)="expandImage()"
+                 (mouseout)="shrinkImage()">
+              </div>
           </span>
       </mat-expansion-panel>
       </div>
 
-      <mat-checkbox>Выбрать</mat-checkbox>
+
+      <mat-checkbox (change)="setChoose()">Выбрать</mat-checkbox>
     </mat-card-content>
+
   </mat-card>
 </mat-card>
 

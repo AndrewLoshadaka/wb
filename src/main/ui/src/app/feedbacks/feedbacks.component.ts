@@ -1,16 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import {FeedbacksService} from "./feedbacks.service";
 import {PageEvent} from "@angular/material/paginator";
 import {FeedbackComponent} from "../feedback/feedback.component";
+import {MatDialog} from "@angular/material/dialog";
+import {AnswerWindowComponent} from "../answer-window/answer-window.component";
 
 @Component({
   selector: 'app-feedbacks',
   templateUrl: './feedbacks.component.html',
   styleUrls: ['./feedbacks.component.css']
 })
-export class FeedbacksComponent {
+export class FeedbacksComponent implements AfterViewInit {
+  @ViewChildren(FeedbackComponent) feedbackComponents!: QueryList<FeedbackComponent>;
 
-  constructor(private feedbacksService: FeedbacksService) {}
+
+  constructor(private feedbacksService: FeedbacksService, public dialog: MatDialog) {}
+
+  openModal() {
+    this.dialog.open(AnswerWindowComponent, {
+      width: '1400px', // Указать желаемую ширину модального окна
+      height: '800px',
+      data: this.selectedFeedbacks
+    });
+  }
+
 
   allBrandName: string[] = [];
   brands: string = "";
@@ -23,10 +36,13 @@ export class FeedbacksComponent {
   photos = "";
   video = "true";
   showFilters: boolean = false;
+
   currentFeedbacks: FeedbackComponent[] = [];
-  currentChoseFeedback: boolean [] = [];
+  selectedFeedbacks: any[] = [];
+
   pageSize: number = 25;
   pageIndex: number = 0;
+
 
   getBrands(){
     this.showClick = false;
@@ -34,6 +50,7 @@ export class FeedbacksComponent {
     this.feedbacksService.getBrandName(this.name).subscribe((v: any) => {
       this.allBrandName = v;
     });
+
     this.showFilters = true;
   }
 
@@ -46,11 +63,6 @@ export class FeedbacksComponent {
         this.allFeedbacks = v;
         this.pageSize = 25;
         this.pageIndex = 0;
-
-
-        for(let i = 0; i < v.length; i++) {
-          this.currentChoseFeedback[i] = false;
-        }
 
         this.currentFeedbacks = this.allFeedbacks.slice(this.pageSize * this.pageIndex,
           this.pageSize * this.pageIndex + this.pageSize)
@@ -68,13 +80,27 @@ export class FeedbacksComponent {
       this.pageSize * this.pageIndex + this.pageSize)
   }
 
+  ngAfterViewInit() {
+    this.currentFeedbacks = this.allFeedbacks.slice(
+      this.pageSize * this.pageIndex,
+      this.pageSize * this.pageIndex + this.pageSize
+    );
+  }
+
   sendAnswerOnFeedbacks() {
-    for(let i = 0; i < this.currentChoseFeedback.length; i++){
-      console.log(this.currentFeedbacks[i].checked);
+    //создает массив с отзывами которые выбраны
+    this.selectedFeedbacks = this.feedbackComponents.filter(feedback => feedback.checked);
+    this.openModal();
+  }
+
+  onCheckboxChange (event: { feedbackId: number, checked: boolean }) { //вызывается при изменении чекбокса в дочернем
+    const feedbackToUpdate = this.allFeedbacks.find(feedback => feedback.id === event.feedbackId); //находит среди всех отзывов отзыв с id выбранного
+    if (feedbackToUpdate) {
+        feedbackToUpdate.checked = event.checked;
     }
   }
 
-  setChoose(){
 
-  }
+
+  protected readonly console = console;
 }

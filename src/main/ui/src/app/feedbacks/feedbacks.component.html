@@ -1,3 +1,4 @@
+
 <div class="container">
   <br>
   <br>
@@ -80,16 +81,16 @@
                          aria-label="Select page">
           </mat-paginator>
 
-          <p *ngFor="let feedback of currentFeedbacks">
-            <mat-checkbox (click)="setChoose()">Выбрать</mat-checkbox>
-            <app-feedback [feedback]="feedback"></app-feedback>
-            <br>
-          </p>
+          <ng-container *ngFor="let feedback of currentFeedbacks">
+            <form>
+              <app-feedback [feedback]="feedback" (checkboxChange)="onCheckboxChange($event)"></app-feedback>
+              <br>
+            </form>
+          </ng-container>
+
           <button mat-button class="bottom" (click)="sendAnswerOnFeedbacks()">Ответить на отзывы</button>
           </div>
       </div>
-
-
     </div>
   </div>
 

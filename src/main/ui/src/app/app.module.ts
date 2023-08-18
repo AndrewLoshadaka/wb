@@ -27,6 +27,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatDialogModule} from "@angular/material/dialog";
 import {RouterModule, Routes} from "@angular/router";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import { AnswerWindowComponent } from './answer-window/answer-window.component';
 
 const appRoutes: Routes = [
   {path: 'list', component: FeedbacksComponent},
@@ -40,6 +41,7 @@ const appRoutes: Routes = [
     FeedbacksComponent,
     AnswerDialogComponent,
     StartComponent,
+    AnswerWindowComponent,
 
   ],
   imports: [

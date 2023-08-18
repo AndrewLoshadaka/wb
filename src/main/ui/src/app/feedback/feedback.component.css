@@ -2,6 +2,33 @@ img {
   margin: 0 10px;
 }
 
+img.mat-card-lg-image {
+  max-width: 246px;
+  max-height: 328px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.image-container {
+  position: relative;
+  display: inline-block;
+}
+
+img.mat-card-lg-image1 {
+  max-width: 246px;
+  max-height: 328px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+img.mat-card-lg-image:hover {
+  transform: scale(1.2); /* Увеличение размера изображения на 20% при наведении */
+}
+
+img.mat-card-lg-image1:hover {
+  transform: scale(1.7);
+}
+
 .feedbackText{
   font-weight: bold;
 }

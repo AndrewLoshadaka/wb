@@ -1,4 +1,4 @@
-import {Component, Input, Output} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {AnswerDialogComponent} from "../answer-dialog/answer-dialog.component";
 
@@ -10,14 +10,14 @@ import {AnswerDialogComponent} from "../answer-dialog/answer-dialog.component";
 
 
 export class FeedbackComponent {
-
   @Input() feedback: any;
+  @Output() checkboxChange = new EventEmitter<{feedbackId: number, checked: boolean}>();
+  isImageExpanded: boolean = false;
 
   checked: boolean = false;
 
-  constructor(public dialog: MatDialog) {
-  }
 
+  constructor(public dialog: MatDialog) {}
 
   openDialog(): void {
     const dialogRef = this.dialog.open(AnswerDialogComponent, {
@@ -29,7 +29,16 @@ export class FeedbackComponent {
     });
   }
 
-  sendAnswerOnFeedbacks() {
+  expandImage() {
+    this.isImageExpanded = true;
+  }
 
+  shrinkImage() {
+    this.isImageExpanded = false;
+  }
+
+  setChoose() {
+    this.checked = !this.checked;
+    this.checkboxChange.emit({ feedbackId: this.feedback.id, checked: this.checked });
   }
 }

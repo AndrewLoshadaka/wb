@@ -20,7 +20,7 @@ public class WildberriesApi {
     public FeedbacksInfo getFeedbacks(String token, int count) {
         String urlTemplate = UriComponentsBuilder.fromHttpUrl("https://feedbacks-api.wb.ru/api/v1/feedbacks")
                 .queryParam("isAnswered", false)
-                .queryParam("take", "{take}")
+                .queryParam("take", 5000)
                 .queryParam("skip", 0)
                 .encode()
                 .toUriString();

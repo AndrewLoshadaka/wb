@@ -1,8 +1,18 @@
-mat-button-toggle-group {
+.mat-button-toggle{
   margin-left: 12px;
   height: 2rem;
   align-items: center;
+  font-size: 15px;
+  color: #000060;
+  background-color: burlywood;
 }
+
 .mat-paginator {
   display: flex;
 }
+
+a{color:#000060; font-weight: bold}
+a:hover {color:#ff0000; font-weight: bold; text-decoration: none}
+h1 {color: #0000ff; font-size:18px}
+h2 {color: #ff00ff; font-size:16px}
+p {color: #600000; font-size:14px}

@@ -10,8 +10,9 @@ public class ConnectionDB {
     public static Connection getConnection() {
         try {
             String user = "andrew";
-            String password = "1925";
-            String url = "jdbc:mysql://localhost:3306/_schema";
+            String password = "andrew5525613";
+
+            String url = "jdbc:postgresql://localhost:5432/keys_wb";
 
             connection = DriverManager.getConnection(url, user, password);
             return connection;
