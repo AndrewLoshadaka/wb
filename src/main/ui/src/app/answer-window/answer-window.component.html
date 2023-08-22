@@ -1,0 +1,60 @@
+<div class="modal-container" *ngIf="selectedFeedbacks.length > 0">
+  <mat-card class="modal-card">
+
+    <button mat-icon-button (click)="prevPage()" class="nav-button left-button">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <!-- Кнопка Вперед -->
+    <button mat-icon-button (click)="nextPage()" class="nav-button right-button">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+
+    <div class="mat-card-header-wrapper">
+    <mat-card-header >
+      <mat-card-title>Продукт: {{getCurrentFeedback().feedback.productDetails.productName}}</mat-card-title>
+      <mat-card-subtitle>Артикул: {{getCurrentFeedback().feedback.productDetails.nmId}}</mat-card-subtitle>
+      <mat-card-subtitle>Бренд: {{getCurrentFeedback().feedback.productDetails.brandName}}</mat-card-subtitle>
+      <mat-card-subtitle>Оценка: {{getCurrentFeedback().feedback.productValuation}}</mat-card-subtitle>
+      <mat-card-subtitle>
+        <a href="{{getCurrentFeedback().feedback.productDetails.wbUrl}}" target="_blank">Товар на WB</a>
+      </mat-card-subtitle>
+      <img class="mat-card-lg-image" src="{{getCurrentFeedback().feedback.productDetails.photoLink}}">
+    </mat-card-header>
+    </div>
+
+    <div class="mat-card-header-wrapper">
+    <mat-card-content class = "mat-card-text">
+      Отзыв:
+      <p class="feedbackText">
+        {{getCurrentFeedback().feedback.text}}
+      </p>
+      <div *ngIf="getCurrentFeedback().feedback.photoLinks?.length > 0">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Фото
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <span *ngFor="let img of getCurrentFeedback().feedback.photoLinks">
+            <div class="image-container">
+            <img class="mat-card-lg-image1"
+                 [src]="img.fullSize">
+              </div>
+          </span>
+        </mat-expansion-panel>
+      </div>
+    </mat-card-content>
+    </div>
+
+    <div class="textarea-wrapper">
+      <textarea [(ngModel)]="responseText.answer + getCurrentFeedback().feedback.productDetails.brandName"></textarea>
+    </div>
+
+    <button mat-button class="bottom-button" (click)="sendResponse(
+    getCurrentFeedback().feedback.id,
+    getCurrentFeedback().feedback.productDetails.brandName)">
+      Отправить ответ</button>
+  </mat-card>
+</div>
