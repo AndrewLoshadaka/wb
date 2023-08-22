@@ -27,13 +27,5 @@ public class FeedbackController {
 
 
 
-    @PostMapping("/answer")
-    public ResponseEntity<String> sendResponse(@RequestBody AnswerDto body){
-        try{
-            System.out.println(body.getId() + " " + body.getText() + " " + body.getBrandName());
-            return ResponseEntity.ok("{\"message\": \"ok!\"}");
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"message\": \"error!\"}");
-        }
-    }
+
 }
