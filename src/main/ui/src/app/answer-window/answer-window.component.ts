@@ -1,7 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {HttpClient} from "@angular/common/http";
-import * as Excel from 'xlsx';
 
 @Component({
   selector: 'app-answer-window',
@@ -15,11 +14,11 @@ export class AnswerWindowComponent {
     answer: undefined
   };
 
-  //tempAnswer: string = 'Хороший ответ на хороший отзыв! С уважением '
 
   constructor(
       @Inject(MAT_DIALOG_DATA) public data: any,
-      private http: HttpClient) {
+      private http: HttpClient,
+       private dialogRef: MatDialogRef<AnswerWindowComponent>) {
     this.selectedFeedbacks = data;
 
     this.getAnswer();
@@ -65,11 +64,20 @@ export class AnswerWindowComponent {
       (response) => {
         console.log('Ok!' + JSON.stringify(response));
         this.deleteItem();
+        if (this.selectedFeedbacks.length === 0) {
+                this.dialogRef.close();
+              }
       },
       (error) => {
         console.log('error! ' + JSON.stringify(error));
       }
     )
+
+/*    const indexToRemove = this.feedbacks.allFeedbacks.findIndex(feedback => feedback.id === feedbackId);
+
+    this.feedbacks.allFeedbacks.splice(indexToRemove, 1);
+    console.log(this.feedbacks.allFeedbacks.length);*/
+
     this.getAnswer();
   }
 
