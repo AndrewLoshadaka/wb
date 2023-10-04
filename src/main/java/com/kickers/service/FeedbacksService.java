@@ -6,6 +6,7 @@ import com.kickers.api.Feedback;
 import com.kickers.api.ProductDetails;
 import com.kickers.api.WildberriesApi;
 import com.kickers.dao.ConnectionDB;
+import com.kickers.dao.FeedbackDto;
 import com.kickers.entity.FeedbackEntity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +15,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +41,7 @@ public class FeedbacksService {
     private String getToken(String supplier){
         try {
             assert connection != null;
-            PreparedStatement statement = connection.prepareStatement("select API_NEW as a from corp where corpname =" + "\'" + supplier + "\'");
+            PreparedStatement statement = connection.prepareStatement("select API_NEW as a from corps where corpname =" + "'" + supplier + "'");
             ResultSet result = statement.executeQuery();
             result.next();
             System.out.println(result.getString("a"));
@@ -47,7 +54,7 @@ public class FeedbacksService {
         List<String> list = new ArrayList<>();
         try {
             assert connection != null;
-            PreparedStatement statement = connection.prepareStatement("select corpname as name from corp");
+            PreparedStatement statement = connection.prepareStatement("select corpname as name from corps");
             ResultSet result = statement.executeQuery();
             while (result.next()){
                 list.add(result.getString("name"));
@@ -57,17 +64,53 @@ public class FeedbacksService {
         return null;
     }
 
+    // TODO: 15.09.2023 логику получения всех отзывов вынести в отдельный класс
+    // TODO: 15.09.2023 после этого сортировать отзывы для автоответа и для отправки в json на фронт
 
-    public void getFeedbacks(String name){
+    public List<FeedbackDto> getAutoAnswerFeedbacks(long startDate){
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        String formattedDate = currentDate.format(dateFormatter);
+        long timestampCurrent = 0;
+        String name = "";
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        try {
+            Date date = sdf.parse(formattedDate);
+            timestampCurrent =  date.getTime() / 1000; //current day
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        long timestampLastWeek = timestampCurrent - 86400 * 7;
+        getFeedbacks(name, String.valueOf(startDate), String.valueOf(timestampCurrent));
+
+        List<FeedbackDto> detailsFeedbacksList = new ArrayList<>();
+        for(Feedback x : autoAnswerFeedbacks){
+            detailsFeedbacksList.add(new FeedbackDto(
+                    String.valueOf(x.getProductDetails().getNmId()),
+                    String.valueOf(x.getProductValuation()),
+                    x.getProductDetails().getProductName(),
+                    x.getProductDetails().getBrandName(),
+                    x.getProductDetails().getSupplierName())
+            );
+        }
+
+        return detailsFeedbacksList;
+    }
+
+
+    //должен возвращать вообще все
+    private void getFeedbacks(String name, String dateFrom, String dateTo){
         List<FeedbackEntity> feedbackList;
 
-        if(name.equals("")){ //все
+        if(name.isEmpty()){ //все
             List<String> tokens = new ArrayList<>();
             for(String s : Objects.requireNonNull(getAllCorpName()))
                 tokens.add(getToken(s));
             List<CompletableFuture<List<Feedback>>> futures = new ArrayList<>();
             for (String token : tokens) {
-                futures.add(CompletableFuture.supplyAsync(() -> getFeedbacksSort(token)));
+                futures.add(CompletableFuture.supplyAsync(() -> getAllFeedbacks(token, dateFrom, dateTo)));
             }
             feedbackList = futures.stream()
                     .map(CompletableFuture::join)
@@ -94,7 +137,7 @@ public class FeedbacksService {
             System.out.println(temp.size() + " " + autoAnswerFeedbacks.size() + " " + feedbacks.size() + " " + (autoAnswerFeedbacks.size() + feedbacks.size()));
         }
         else {
-            List<Feedback> temp = getFeedbacksSort(getToken(name));
+            List<Feedback> temp = getAllFeedbacks(getToken(name), dateFrom, dateTo);
             splitFeedbacks(temp);
             System.out.println(temp.size() + " " + autoAnswerFeedbacks.size() + " " + feedbacks.size() + " " + (autoAnswerFeedbacks.size() + feedbacks.size()));
         }
@@ -102,22 +145,26 @@ public class FeedbacksService {
         feedbacksCopy = feedbacks;
     }
 
+
+
     private void splitFeedbacks(List<Feedback> temp){
         autoAnswerFeedbacks = temp.stream()
                 .filter(v -> v.getPhotoLinks() == null)
                 .filter(v -> v.getProductValuation() == 4 || v.getProductValuation() == 5)
                 .filter(v -> v.getText().isEmpty())
+                .filter(v -> v.getVideo() == null)
                 .toList();
         feedbacks = temp.stream()
                 .filter(item -> !autoAnswerFeedbacks.contains(item))
                 .toList();
     }
 
-    public Set<String> getBrandName(String name){
+    public Set<String> getBrandName(String name, String dateFrom, String dateTo){
         Set<String> brandSet = new HashSet<>();
-        getFeedbacks(name);
+        getFeedbacks(name, dateFrom, dateTo);
         state.setPhotos("p");
         state.setStars("p");
+        state.setVideo("p");
         for(Feedback x : feedbacks){
             brandSet.add(x.getProductDetails().getBrandName());
         }
@@ -125,9 +172,11 @@ public class FeedbacksService {
         return brandSet;
     }
 
-    public List<Feedback> getFeedbacksSort(String photos, String stars, String supplier, String video, String brand) {
-
-        if(state.getStars().equals(stars) && state.getPhotos().equals(photos) && state.getBrand().equals(brand) )
+    public List<Feedback> getAllFeedbacks(String photos, String stars, String video, String brand) {
+        if(state.getStars().equals(stars)
+                && state.getPhotos().equals(photos)
+                && state.getBrand().equals(brand)
+                && state.getVideo().equals(video))
             return feedbacksCopy;
 
         else {
@@ -155,19 +204,27 @@ public class FeedbacksService {
                         .toList();
             }
 
-            if (!photos.equals("")) {
+            if (!photos.isEmpty()) {
                 feedbacksCopy = feedbacksCopy.stream()
                         .filter(v -> !CollectionUtils.isEmpty(v.getPhotoLinks()) == Boolean.parseBoolean(photos))
                         .toList();
             }
 
-            if (!video.equals("")) {
+            if (video.equals("true")) {
+                System.out.println(feedbacksCopy.size());
                 feedbacksCopy = feedbacksCopy.stream()
                         .filter(v -> v.getVideo() != null)
                         .toList();
+                System.out.println(feedbacksCopy.size());
+            } else if (video.equals("false")) {
+                System.out.println(feedbacksCopy.size());
+                feedbacksCopy = feedbacksCopy.stream()
+                        .filter(v -> v.getVideo() == null)
+                        .toList();
+                System.out.println(feedbacksCopy.size());
             }
 
-            if(!brand.equals("")){
+            if(!brand.isEmpty()){
                 feedbacksCopy = feedbacksCopy.stream()
                         .filter(v -> v.getProductDetails().getBrandName().equals(brand))
                         .toList();
@@ -182,7 +239,7 @@ public class FeedbacksService {
             state.setStars(stars);
             state.setPhotos(photos);
             state.setBrand(brand);
-            System.out.println("get list!");
+            state.setVideo(video);
             return feedbacksCopy;
         }
     }
@@ -234,9 +291,28 @@ public class FeedbacksService {
         return result;
     }
 
-    private List<Feedback> getFeedbacksSort(String token) {
+    private List<Feedback> getAllFeedbacks(String token, String dateFrom, String dateTo) {
         int unansweredFeedbacksCount = wildberriesApi.getUnansweredFeedbacksCount(token);
-        return wildberriesApi.getFeedbacks(token, unansweredFeedbacksCount).getData().getFeedbacks();
+
+        int countSteps = unansweredFeedbacksCount / 5000 + 1;
+        List<Feedback> tempList = new ArrayList<>();
+
+        if (countSteps == 0) {
+            tempList = wildberriesApi.getFeedbacks(token, unansweredFeedbacksCount, 0,
+                            dateFrom,
+                            dateTo)
+                    .getData()
+                    .getFeedbacks();
+        } else {
+            for (int i = 0; i < countSteps; i++) {
+                tempList.addAll(wildberriesApi.getFeedbacks(token, unansweredFeedbacksCount, i,
+                                dateFrom,
+                                dateTo)
+                        .getData()
+                        .getFeedbacks());
+            }
+        }
+        return tempList;
     }
 
     @Getter
@@ -245,5 +321,6 @@ public class FeedbacksService {
         private String stars;
         private String photos;
         private String brand;
+        private String video;
     }
 }

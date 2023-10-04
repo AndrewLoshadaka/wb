@@ -29,32 +29,17 @@
       <p class="feedbackText">
         {{getCurrentFeedback().feedback.text}}
       </p>
-      <div *ngIf="getCurrentFeedback().feedback.photoLinks?.length > 0">
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Фото
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <span *ngFor="let img of getCurrentFeedback().feedback.photoLinks">
-            <div class="image-container">
-            <img class="mat-card-lg-image1"
-                 [src]="img.fullSize">
-              </div>
-          </span>
-        </mat-expansion-panel>
-      </div>
     </mat-card-content>
     </div>
 
     <div class="textarea-wrapper">
-      <textarea [(ngModel)]="responseText.answer + getCurrentFeedback().feedback.productDetails.brandName"></textarea>
+      <textarea [(ngModel)]="responseText.answer"></textarea>
     </div>
 
     <button mat-button class="bottom-button" (click)="sendResponse(
     getCurrentFeedback().feedback.id,
-    getCurrentFeedback().feedback.productDetails.brandName)">
+    getCurrentFeedback().feedback.productDetails.brandName,
+    getCurrentFeedback().feedback.productDetails.supplierName)">
       Отправить ответ</button>
   </mat-card>
 </div>

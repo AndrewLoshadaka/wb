@@ -5,19 +5,16 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionDB {
-    private static Connection connection;
 
     public static Connection getConnection() {
         try {
-            String user = "andrew";
-            String password = "andrew5525613";
+            String user = "newgen";
+            String password = "OleG2170458";
+            String url = "jdbc:mysql://192.168.208.137:3306/wbstat";
 
-            String url = "jdbc:postgresql://localhost:5432/keys_wb";
-
-            connection = DriverManager.getConnection(url, user, password);
-            return connection;
+            return DriverManager.getConnection(url, user, password);
         } catch (SQLException e){
-
+            e.printStackTrace();
         }
         return null;
     }

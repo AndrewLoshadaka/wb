@@ -9,7 +9,7 @@ import {StartComponent} from "./start/start.component";
 import {HttpClientModule} from "@angular/common/http";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
-import {FormsModule} from "@angular/forms";
+import {FormGroup, FormsModule} from "@angular/forms";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { LayoutModule } from '@angular/cdk/layout';
@@ -28,6 +28,8 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {RouterModule, Routes} from "@angular/router";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { AnswerWindowComponent } from './answer-window/answer-window.component';
+import {MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 
 const appRoutes: Routes = [
   {path: 'list', component: FeedbacksComponent},
@@ -41,7 +43,7 @@ const appRoutes: Routes = [
     FeedbacksComponent,
     AnswerDialogComponent,
     StartComponent,
-    AnswerWindowComponent,
+    AnswerWindowComponent
 
   ],
   imports: [
@@ -67,9 +69,14 @@ const appRoutes: Routes = [
     MatPaginatorModule,
     MatFormFieldModule,
     MatDialogModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'ru-RU' }
+  ],
   bootstrap: [AppComponent]
 })
 

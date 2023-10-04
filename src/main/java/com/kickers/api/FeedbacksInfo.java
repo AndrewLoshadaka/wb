@@ -14,7 +14,6 @@ public class FeedbacksInfo {
     private Data data;
     private boolean error;
     private String errorText;
-//              "additionalErrors": null
 
     @Getter
     @NoArgsConstructor

@@ -2,15 +2,15 @@ package com.kickers.dao;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class AnswerDto {
+public class FeedbackDto {
     private String id;
-    private String text;
+    private String productValuation;
+    private String productName;
+    private String brandName;
     private String supplier;
 }

@@ -4,6 +4,53 @@ mat-button-toggle-group {
   align-items: center;
 }
 
+span{
+  font-family: monospace;
+  font-size: 16px;
+}
+
+.mat-button-toggle-supplier {
+  width: 120px;
+}
+
+.mat-button-toggle-brand{
+  width: 100px;
+}
+
+.mat-button-toggle-photo, .mat-button-toggle-video{
+  width: 100px;
+}
+
+
+.mat-button-toggle-supplier, .mat-button-toggle-brand, .mat-button-toggle-valuation,
+.mat-button-toggle-photo, .mat-button-toggle-video{
+  font-family: monospace;
+  font-size: 12px;
+  border: none;
+  border-radius: 5px;
+  background: linear-gradient(to bottom, #ced1cd, #4e5452);
+  color: #fffafa;
+
+  &.mat-button-toggle-checked {
+    background: linear-gradient(to bottom, #967d51, #4c3c18); /* Градиентный фон при выборе */
+    color: #fffafa;
+  }
+}
+
+.button-filter, .button-feedbacks{
+  background: linear-gradient(to bottom, #8b8c7a, #3b3b3b);
+  font-family: monospace;
+  color: #dcdcdc;
+  transition: background-color 0.3s ease;
+
+}
+
+.button-filter:hover, .button-feedbacks:hover{
+  background: linear-gradient(to bottom, #7a7666, #383838);
+  transform: scale(1.05);
+  color: #f0f8ff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
 
 
 .mat-paginator {
@@ -19,4 +66,50 @@ mat-button-toggle-group {
   bottom: 0;
   min-height: 2em;
   background-color:rgba(88, 81, 70, 0);
+}
+
+.app-feedback:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 1); /* Тень при наведении */
+}
+
+
+.container-feedbacks{
+  align-items: center;
+  text-align: left;
+}
+
+mat-form-field {
+  width: 400px;
+}
+
+mat-form-field input {
+  width: 200px;
+  font-size: 16px;
+  border: none;
+}
+
+mat-datepicker-toggle {
+  font-family: monospace;
+  background: linear-gradient(to bottom, #ced1cd, #4e5452);
+  color: #fff;
+  padding: 100% 28px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+mat-datepicker-toggle:hover {
+  background: linear-gradient(to bottom, #8b8c7a, #3b3b3b);
+}
+
+.mat-paginator{
+  width: 600px;
+  border: none;
+  border-radius: 5px;
+  font-family: monospace;
+  background: linear-gradient(to bottom, #ebebeb, #9ba3a0);
+}
+
+p{
+  font-family: monospace;
 }

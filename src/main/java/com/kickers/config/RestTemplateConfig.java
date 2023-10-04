@@ -1,6 +1,5 @@
 package com.kickers.config;
 
-import feign.RequestInterceptor;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

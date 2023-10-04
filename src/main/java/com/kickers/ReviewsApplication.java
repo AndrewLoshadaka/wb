@@ -6,8 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 
 @SpringBootApplication
 @EnableFeignClients
@@ -15,26 +16,20 @@ public class ReviewsApplication {
 
 	public static void main(String[] args) throws SQLException {
 		Connection connection = ConnectionDB.getConnection();
-		Statement statement = connection.createStatement();
+        assert connection != null;
+        Statement statement = connection.createStatement();
 
-		PreparedStatement statement1 = connection.prepareStatement("select * from types");
-		System.out.println(statement1);
+		ResultSet resultSet = statement.executeQuery("select * from answer_params_auto");
+		System.out.println(resultSet.next());
+		System.out.println(resultSet.getString("date"));
 
-		ResultSet set = statement.executeQuery("select * from corp");
-		set.next();
+		LocalDate date = resultSet.getDate("date").toLocalDate();
 
-		System.out.println(getToken("ВЛ"));
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+		String formattedDate = date.format(dateFormatter);
 
+		System.out.println(formattedDate);
 
 		SpringApplication.run(ReviewsApplication.class, args);
 	}
-	private static String getToken(String corpName) throws SQLException{
-		Connection connection = ConnectionDB.getConnection();
-			assert connection != null;
-			PreparedStatement statement = connection.prepareStatement("select API_NEW as a from corp where corpname =" + "\'" + corpName + "\'");
-			ResultSet result = statement.executeQuery();
-			result.next();
-			return result.getString("a");
-	}
-
 }

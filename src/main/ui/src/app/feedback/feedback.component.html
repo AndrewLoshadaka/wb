@@ -1,8 +1,6 @@
-<mat-card>
-  <!--  <mat-card-content>{{feedback.text}}</mat-card-content>-->
+<body>
   <mat-card>
     <mat-card-header>
-      <!--      <div mat-card-avatar class="example-header-image"></div>-->
       <mat-card-title>Продукт: {{feedback.productDetails.productName}}</mat-card-title>
       <mat-card-subtitle>Артикул: {{feedback.productDetails.nmId}}</mat-card-subtitle>
       <mat-card-subtitle>Бренд: {{feedback.productDetails.brandName}}</mat-card-subtitle>
@@ -12,7 +10,6 @@
       </mat-card-subtitle>
       <img class="mat-card-lg-image" src="{{feedback.productDetails.photoLink}}">
 
-
     </mat-card-header>
     <mat-card-content>
       Отзыв:
@@ -20,22 +17,22 @@
         {{feedback.text}}
       </p>
       <div *ngIf="feedback.photoLinks?.length > 0">
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Фото
-          </mat-panel-title>
-        </mat-expansion-panel-header>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Фото
+            </mat-panel-title>
+          </mat-expansion-panel-header>
 
           <span *ngFor="let img of feedback.photoLinks">
-            <div class="image-container">
+            <span class="image-container">
             <img class="mat-card-lg-image1"
                  [src]="img.fullSize"
                  (mouseover)="expandImage()"
                  (mouseout)="shrinkImage()">
-              </div>
+              </span>
           </span>
-      </mat-expansion-panel>
+        </mat-expansion-panel>
       </div>
 
 
@@ -43,8 +40,4 @@
     </mat-card-content>
 
   </mat-card>
-</mat-card>
-
-
-
-
+</body>

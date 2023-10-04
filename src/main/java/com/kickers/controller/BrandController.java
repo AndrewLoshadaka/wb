@@ -14,7 +14,10 @@ import java.util.Set;
 public class BrandController {
     private final FeedbacksService service;
     @GetMapping
-    public Set<String> getFeedbacks(@RequestParam(value = "name", defaultValue = "") String supplier) {
-        return service.getBrandName(supplier);
+    public Set<String> getFeedbacks(@RequestParam(value = "name", defaultValue = "") String supplier,
+                                    @RequestParam(value = "dateFrom") String dateFrom,
+                                    @RequestParam(value = "dateTo") String dateTo) {
+        
+        return service.getBrandName(supplier, dateFrom, dateTo);
     }
 }

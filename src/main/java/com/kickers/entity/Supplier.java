@@ -1,4 +1,4 @@
-package com.kickers.dao;
+package com.kickers.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,10 +7,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class AnswerDto {
-    private String id;
-    private String text;
-    private String supplier;
+@NoArgsConstructor
+
+public class Supplier {
+    private String fullNameSupplier;
+    private String corpName;
 }

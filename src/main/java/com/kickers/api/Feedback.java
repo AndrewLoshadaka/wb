@@ -16,9 +16,6 @@ import java.util.List;
 public class Feedback {
 
     private String id;
-    private long imtId;
-    private long nmId;
-    private long subjectId;
     private String text;
     private int productValuation;
     private ZonedDateTime createdDate;
@@ -32,7 +29,7 @@ public class Feedback {
 
     private List<PhotoLink> photoLinks;
     private Video video;
-    //            "video": null,
+
     private boolean isCreationSupplierComplaint;
     private boolean wasViewed;
 
@@ -60,4 +57,5 @@ public class Feedback {
         private String uri;
         private String thumbnailUri;
     }
+
 }
