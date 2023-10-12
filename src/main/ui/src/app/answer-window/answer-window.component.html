@@ -33,13 +33,10 @@
     </div>
 
     <div class="textarea-wrapper">
-      <textarea [(ngModel)]="responseText.answer"></textarea>
+      <textarea [(ngModel)]="answerText"></textarea>
     </div>
 
-    <button mat-button class="bottom-button" (click)="sendResponse(
-    getCurrentFeedback().feedback.id,
-    getCurrentFeedback().feedback.productDetails.brandName,
-    getCurrentFeedback().feedback.productDetails.supplierName)">
+    <button mat-button class="bottom-button" (click)="sendResponse()">
       Отправить ответ</button>
   </mat-card>
 </div>

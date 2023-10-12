@@ -22,7 +22,6 @@ public class AnswerController {
     public ResponseEntity<Map<String, String>> getAnswer(
             @RequestBody Map<String, String> map){
         String answer = answerService.createAnswer(map.get("product"), map.get("brand"), map.get("supplier"));
-        //System.out.println(answer);
         Map<String, String> response = new HashMap<>();
         response.put("answer", answer);
         return ResponseEntity.ok(response);

@@ -17,13 +17,19 @@ public class FeedbackController {
     public List<Feedback> getFeedbacks(@RequestParam(value = "photos", defaultValue = "") String photos,
                                        @RequestParam(value = "stars", defaultValue = "") String stars,
                                        @RequestParam(value = "brand", defaultValue = "") String brand,
-                                       @RequestParam(value = "video", defaultValue = "") String video) {
-        return service.getAllFeedbacks(photos, stars, video, brand);
+                                       @RequestParam(value = "video", defaultValue = "") String video,
+                                       @RequestParam(value = "text", defaultValue = "") String text) {
+        return service.getAllFeedbacks(photos, stars, video, brand, text);
     }
 
     @GetMapping("/empty")
     public List<FeedbackDto> getEmptyFeedbackList(
             @RequestParam(value = "date") long date){
         return service.getAutoAnswerFeedbacks(date);
+    }
+
+    @GetMapping("/c")
+    public void s(){
+        System.out.println("sdfsf");
     }
 }

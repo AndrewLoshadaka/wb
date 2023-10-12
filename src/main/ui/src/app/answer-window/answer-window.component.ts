@@ -10,8 +10,9 @@ import { FeedbacksService } from '../feedbacks/feedbacks.service';
 })
 
 export class AnswerWindowComponent {
-  selectedFeedbacks: any[];
-  currentFeedbackIndex: number = 0;
+  selectedFeedbacks;
+  currentFeedbackIndex;
+  answerText;
   responseText = {
     answer: ""
   };
@@ -23,24 +24,26 @@ export class AnswerWindowComponent {
       private dialogRef: MatDialogRef<AnswerWindowComponent>,
       private feedbacksService: FeedbacksService) {
 
+    this.currentFeedbackIndex = 0;
     this.selectedFeedbacks = data;
+    this.answerText = "";
     this.getAnswer();
   }
 
   nextPage(){
-    this.getAnswer();
     if(this.currentFeedbackIndex < this.selectedFeedbacks.length - 1)
       this.currentFeedbackIndex++;
     else if(this.currentFeedbackIndex == this.selectedFeedbacks.length - 1)
       this.currentFeedbackIndex = 0;
+    this.getAnswer();
   }
 
   prevPage(){
-    this.getAnswer();
     if(this.currentFeedbackIndex > 0)
       this.currentFeedbackIndex--;
     else if(this.currentFeedbackIndex == 0)
       this.currentFeedbackIndex = this.selectedFeedbacks.length - 1;
+    this.getAnswer();
   }
 
   getCurrentFeedback(){
@@ -56,46 +59,21 @@ export class AnswerWindowComponent {
     }
   }
 
-  sendResponse(feedbackId: String, brandName: String, supplierName: string) {
-
-    const postData = {
-      id: feedbackId,
-      text: this.responseText.answer,
-      brandName: brandName,
-      supplier: supplierName
-    };
-
-    this.http.post('/api/feedbacks/send-answer', postData).subscribe(
-      (response) => {
-        console.log('Ok!' + JSON.stringify(response));
-        this.deleteItem();
-        if (this.selectedFeedbacks.length === 0) {
-                this.dialogRef.close();
-        }
-        this.feedbacksService.deleteFeedback(feedbackId);
-      },
-      (error) => {
-        console.log('error! ' + JSON.stringify(error));
-      }
-    )
+  sendResponse() {
+    this.feedbacksService.sendResponse(this.selectedFeedbacks[this.currentFeedbackIndex], this.answerText);
+    this.deleteItem();
     this.getAnswer();
   }
 
-  getAnswer(){
-    const postData ={
-      product: this.selectedFeedbacks[this.currentFeedbackIndex].feedback.productDetails.productName,
-      brand: this.selectedFeedbacks[this.currentFeedbackIndex].feedback.productDetails.brandName,
-      supplier: this.selectedFeedbacks[this.currentFeedbackIndex].feedback.productDetails.supplierName
-    }
-
-    this.http.post('/api/feedbacks/answer', postData).subscribe(
-      (response: any) => {
-        console.log('Ok!' + JSON.stringify(response));
-        this.responseText.answer = response.answer;
+  getAnswer() {
+    this.feedbacksService.getAnswer(this.selectedFeedbacks[this.currentFeedbackIndex]).subscribe(
+      (response) => {
+        console.log('Ok!' + response.answer);
+        this.answerText = response.answer;
       },
       (error) => {
         console.log('error! ' + JSON.stringify(error));
       }
-    )
+    );
   }
 }

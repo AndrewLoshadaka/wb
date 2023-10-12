@@ -1,4 +1,4 @@
-import { Component, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import {Component, ViewChildren, QueryList, AfterViewInit, OnInit} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 import {FeedbacksService} from "./feedbacks.service";
 import {PageEvent} from "@angular/material/paginator";
@@ -6,13 +6,14 @@ import {FeedbackComponent} from "../feedback/feedback.component";
 import {MatDialog} from "@angular/material/dialog";
 import {AnswerWindowComponent} from "../answer-window/answer-window.component";
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import {AnswerDialogComponent} from "../answer-dialog/answer-dialog.component";
 @Component({
   selector: 'app-feedbacks',
   templateUrl: './feedbacks.component.html',
   styleUrls: ['./feedbacks.component.css'],
 })
 
-export class FeedbacksComponent implements AfterViewInit {
+export class FeedbacksComponent implements AfterViewInit, OnInit {
   @ViewChildren(FeedbackComponent) feedbackComponents!: QueryList<FeedbackComponent>;
 
 
@@ -24,12 +25,15 @@ export class FeedbacksComponent implements AfterViewInit {
         this.currentFeedbacks = this.allFeedbacks.slice(this.pageSize * this.pageIndex,
           this.pageSize * this.pageIndex + this.pageSize)
     });
-    this.console.log(this.allFeedbacks.length);
 
     this.endDate = new Date();
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     this.startDate = oneWeekAgo;
+  }
+
+  ngOnInit() {
+
   }
 
   openModal() {
@@ -38,7 +42,6 @@ export class FeedbacksComponent implements AfterViewInit {
       height: '800px',
       data: this.selectedFeedbacks
     });
-
   }
 
 
@@ -52,21 +55,18 @@ export class FeedbacksComponent implements AfterViewInit {
   stars = "";
   photos = "";
   video = "";
+  text = "";
   showFilters: boolean = false;
 
   currentFeedbacks: any[] = [];
   selectedFeedbacks: any[] = [];
+  allChecked = false;
 
   pageSize: number = 25;
   pageIndex: number = 0;
 
   startDate: Date | null = null;
   endDate: Date | null = null;
-
-  range = new FormGroup({
-    start: new FormControl<Date | null>(null),
-    end: new FormControl<Date | null>(null),
-  });
 
   onDateRangeSelected(event: any) {
     if (event.value) {
@@ -85,14 +85,12 @@ export class FeedbacksComponent implements AfterViewInit {
 
     this.showFilters = true;
   }
-
-
   reloadFeedbacks() {
-
+    this.allChecked = false
     this.showClick = true;
     this.allFeedbacks = [];
 
-    this.feedbacksService.getFeedbacks(this.stars, this.photos, this.video, this.brands)
+    this.feedbacksService.getFeedbacks(this.stars, this.photos, this.video, this.brands, this.text)
       .subscribe((v: any) => {
         this.allFeedbacks = v;
         this.pageSize = 25;
@@ -101,10 +99,6 @@ export class FeedbacksComponent implements AfterViewInit {
           this.pageSize * this.pageIndex + this.pageSize)
       });
   }
-
-
-
-
   getFeedbacksCount() {
     return this.allFeedbacks.length;
   }
@@ -124,19 +118,50 @@ export class FeedbacksComponent implements AfterViewInit {
   }
 
   sendAnswerOnFeedbacks() {
-    //создает массив с отзывами которые выбраны
     this.selectedFeedbacks = this.feedbackComponents.filter(feedback => feedback.checked);
     this.openModal();
   }
-
-  onCheckboxChange (event: { feedbackId: number, checked: boolean }) { //вызывается при изменении чекбокса в дочернем
-    const feedbackToUpdate = this.allFeedbacks.find(feedback => feedback.id === event.feedbackId); //находит среди всех отзывов отзыв с id выбранного
+  onCheckboxChange (event: { feedbackId: number, checked: boolean }) {
+    const feedbackToUpdate = this.allFeedbacks.find(feedback => feedback.id === event.feedbackId);
     if (feedbackToUpdate) {
         feedbackToUpdate.checked = event.checked;
     }
   }
 
+  setAllChoose() {
+    this.allChecked = !this.allChecked;
+    if (this.allChecked) {
+      this.selectedFeedbacks = this.currentFeedbacks;
+      this.feedbackComponents.forEach((feedbackComponent) => {
+        if(!feedbackComponent.checked)
+          feedbackComponent.checked = !feedbackComponent.checked;
+      });
+    }
+    else {
+      this.feedbackComponents.forEach((feedbackComponent) => {
+        if(feedbackComponent.checked)
+          feedbackComponent.checked = !feedbackComponent.checked;
+      });
+    }
+
+    console.log(this.selectedFeedbacks.length)
+  }
 
 
-  protected readonly console = console;
+  autoAnswerOnFeedbacks() {
+    this.selectedFeedbacks = this.feedbackComponents.filter(feedback => feedback.checked);
+    this.selectedFeedbacks.forEach((feedback) => {
+      this.feedbacksService.getAnswer(feedback).subscribe(
+        (response) => {
+          console.log('Got answer: ' + response.answer);
+
+          this.feedbacksService.sendResponse(feedback, response.answer)
+        },
+        (error) => {
+          console.log('Error getting answer: ' + JSON.stringify(error));
+        }
+      );
+    });
+  }
+
 }

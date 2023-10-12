@@ -172,14 +172,14 @@ public class FeedbacksService {
         return brandSet;
     }
 
-    public List<Feedback> getAllFeedbacks(String photos, String stars, String video, String brand) {
-        if(state.getStars().equals(stars)
+    public List<Feedback> getAllFeedbacks(String photos, String stars, String video, String brand, String text) {
+        /*if(state.getStars().equals(stars)
                 && state.getPhotos().equals(photos)
                 && state.getBrand().equals(brand)
                 && state.getVideo().equals(video))
-            return feedbacksCopy;
+            return feedbacksCopy;*/
 
-        else {
+        //else {
             feedbacksCopy = feedbacks;
             List<FeedbackEntity> feedbackList;
             feedbackList = feedbacksCopy.stream()
@@ -224,7 +224,18 @@ public class FeedbacksService {
                 System.out.println(feedbacksCopy.size());
             }
 
-            if(!brand.isEmpty()){
+            if(text.equals("true")){
+                feedbacksCopy = feedbacksCopy.stream()
+                        .filter(v -> !v.getText().isEmpty())
+                        .toList();
+            } else if (text.equals("false")) {
+                feedbacksCopy = feedbacksCopy.stream()
+                        .filter(v -> v.getText().isEmpty())
+                        .toList();
+            }
+
+
+        if(!brand.isEmpty()){
                 feedbacksCopy = feedbacksCopy.stream()
                         .filter(v -> v.getProductDetails().getBrandName().equals(brand))
                         .toList();
@@ -242,8 +253,6 @@ public class FeedbacksService {
             state.setVideo(video);
             return feedbacksCopy;
         }
-    }
-
     private String getPhotoLink(long nmId){
         String nmIdStr = String.valueOf(nmId);
         String result = null;

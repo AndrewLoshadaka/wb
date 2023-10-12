@@ -56,6 +56,15 @@
       </p>
 
       <p>
+        <span>С текстом или без</span>
+        <mat-button-toggle-group [(ngModel)]="text" aria-label="Text" [(value)]="text">
+          <mat-button-toggle class="mat-button-toggle-video" value="true">С текстом</mat-button-toggle>
+          <mat-button-toggle class="mat-button-toggle-video" value="false">Без текста</mat-button-toggle>
+          <mat-button-toggle class="mat-button-toggle-video" value="">Все</mat-button-toggle>
+        </mat-button-toggle-group>
+      </p>
+
+      <p>
         <span>С фото или без</span>
         <mat-button-toggle-group [(ngModel)]="photos" aria-label="Photos" [(value)]="photos">
           <mat-button-toggle class="mat-button-toggle-photo" value="true">С фото</mat-button-toggle>
@@ -85,24 +94,33 @@
 
           <div *ngIf="allFeedbacks.length !== 0">
             <p>Общее количество отзывов без ответа {{getFeedbacksCount()}}</p>
-            <p>
-            <mat-paginator class="mat-paginator"
-                           (page)="handlePageEvent($event)"
-                           [length]="allFeedbacks.length"
-                           [pageSize]="pageSize"
-                           [pageIndex]="pageIndex"
-                           [pageSizeOptions]="[25, 50, 100]"
-                           aria-label="Select page">
-            </mat-paginator>
-            </p>
+
+            <div class="checkboxes-container">
+              <mat-paginator class="mat-paginator"
+                             (page)="handlePageEvent($event)"
+                             [length]="allFeedbacks.length"
+                             [pageSize]="pageSize"
+                             [pageIndex]="pageIndex"
+                             [pageSizeOptions]="[25, 50, 100]"
+                             aria-label="Select page">
+              </mat-paginator>
+              <div class="checkboxes">
+                <mat-checkbox (change)="setAllChoose()">Выбрать все</mat-checkbox>
+                <!--button mat-button (click)="setInvertChoose()">Инвертировать</button-->
+              </div>
+            </div>
             <ng-container *ngFor="let feedback of currentFeedbacks">
               <form>
-                <app-feedback [feedback]="feedback" (checkboxChange)="onCheckboxChange($event)"></app-feedback>
-                <br>
+                <app-feedback [feedback]="feedback" [allChecked]="allChecked" (checkboxChange)="onCheckboxChange($event)"></app-feedback>
               </form>
             </ng-container>
 
-            <button mat-button class="bottom" (click)="sendAnswerOnFeedbacks()">Ответить на отзывы</button>
+            <div class="bottom">
+              <button mat-button (click)="sendAnswerOnFeedbacks()">Ответить на отзывы с возможностью редактирования</button>
+              <button mat-button (click)="autoAnswerOnFeedbacks()">Автоматический ответ</button>
+            </div>
+
+
             </div>
         </div>
       </div>

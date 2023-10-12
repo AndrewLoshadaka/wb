@@ -75,6 +75,7 @@ public class WildberriesApi {
             System.err.println("Ошибка при отправке PATCH-запроса. Код ошибки: " + responseEntity.getStatusCodeValue());
         }
     }
+
     public LinkedHashMap<String, String> getFeedbackById(String id, String token){
         String urlTemplate = UriComponentsBuilder.fromHttpUrl("https://feedbacks-api.wb.ru/api/v1/feedback")
                 .queryParam("id", id)

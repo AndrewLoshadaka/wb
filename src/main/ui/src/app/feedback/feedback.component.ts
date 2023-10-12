@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {AnswerDialogComponent} from "../answer-dialog/answer-dialog.component";
 
@@ -9,26 +9,30 @@ import {AnswerDialogComponent} from "../answer-dialog/answer-dialog.component";
 })
 
 
-export class FeedbackComponent {
+export class FeedbackComponent implements OnInit{
   @Input() feedback: any;
+  @Input() allChecked: boolean = false;
+
+  @Output() toggleChange = new EventEmitter<void>();
   @Output() checkboxChange = new EventEmitter<{feedbackId: number, checked: boolean}>();
+
   isImageExpanded: boolean = false;
-
-  checked: boolean = false;
-
-
-  constructor(public dialog: MatDialog) {}
-
-  openDialog(): void {
-    const dialogRef = this.dialog.open(AnswerDialogComponent, {
-      data: {name: this.feedback.text},
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+  checked: boolean = this.allChecked;
+  ngOnInit() {
+    this.checked = this.allChecked;
+  }
+  constructor(public dialog: MatDialog) {
+  }
+  openPhotoModal(images: any[], index: number) {
+    this.dialog.open(AnswerDialogComponent, {
+      width: '1400px',
+      maxHeight: '900px',
+      data: {
+        images: images,
+        index: index
+      }
     });
   }
-
   expandImage() {
     this.isImageExpanded = true;
   }
@@ -39,6 +43,6 @@ export class FeedbackComponent {
 
   setChoose() {
     this.checked = !this.checked;
-    this.checkboxChange.emit({ feedbackId: this.feedback.id, checked: this.checked });
+    this.checkboxChange.emit({checked: this.checked, feedbackId: this.feedback.id});
   }
 }

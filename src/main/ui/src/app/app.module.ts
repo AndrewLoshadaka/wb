@@ -31,10 +31,7 @@ import { AnswerWindowComponent } from './answer-window/answer-window.component';
 import {MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 
-const appRoutes: Routes = [
-  {path: 'list', component: FeedbacksComponent},
-  //{path: 'list/f', component: FilterComponent}
-]
+
 
 @NgModule({
   declarations: [
@@ -47,7 +44,7 @@ const appRoutes: Routes = [
 
   ],
   imports: [
-    RouterModule.forRoot(appRoutes),
+    //RouterModule.forRoot(appRoutes),
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
