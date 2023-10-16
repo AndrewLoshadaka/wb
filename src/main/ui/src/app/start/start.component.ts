@@ -15,6 +15,7 @@ export class StartComponent {
   name = "АЛ";
 
   feedbacks() {
-    this.router.navigate(['/list']).then(r => {});
+    this.router.navigate(['/']).then(r => {});
+    //this.router.navigate(['/list']).then(r => {});
   }
 }

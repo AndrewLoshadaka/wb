@@ -32,6 +32,15 @@
     </mat-card-content>
     </div>
 
+    <mat-form-field class="selected-field">
+      <mat-label>Шаблоны ответов</mat-label>
+      <mat-select class="template-selected" [(ngModel)]="selectedValue">
+          <mat-option value="option" *ngFor="let item of templates; let i = index" [value]="item" (click)="getAnswerByTemplate(i)">
+            {{item.template}}
+          </mat-option>
+      </mat-select>
+    </mat-form-field>
+
     <div class="textarea-wrapper">
       <textarea [(ngModel)]="answerText"></textarea>
     </div>

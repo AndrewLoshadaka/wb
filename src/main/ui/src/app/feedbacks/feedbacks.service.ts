@@ -14,7 +14,7 @@ export class FeedbacksService {
     answer: ""
   };
 
-  getFeedbacks(stars: string, photos: string, video: string, brand: string, text: string) {
+  getFeedbacks(stars: number[], photos: string, video: string, brand: string, text: string) {
     return this.http.get(this.rootURL + '/feedbacks?stars=' + stars + '&photos=' + photos + '&video=' + video + '&brand=' + brand + "&text=" + text);
   }
 
@@ -37,7 +37,6 @@ export class FeedbacksService {
   }
 
   sendResponse(feedback: any, text: string) {
-
     const postData = {
       id: feedback.feedback.id,
       text: text,
@@ -55,33 +54,18 @@ export class FeedbacksService {
       }
     )
   }
-
-  /*getAnswer(selectedFeedback: any): any{
-    const postData ={
-      product: selectedFeedback.feedback.productDetails.productName,
-      brand: selectedFeedback.feedback.productDetails.brandName,
-      supplier: selectedFeedback.feedback.productDetails.supplierName
-    }
-
-    this.http.post('/api/feedbacks/answer', postData).subscribe(
-      (response: any) => {
-        console.log('Ok!' + JSON.stringify(response));
-        this.responseText.answer = response.answer;
-        return response.answer;
-      },
-      (error) => {
-        console.log('error! ' + JSON.stringify(error));
-      }
-    )
-  }*/
-
   getAnswer(selectedFeedback: any): Observable<any> {
+    let isPhoto = selectedFeedback.feedback.photoLinks !== null
     const postData = {
       product: selectedFeedback.feedback.productDetails.productName,
       brand: selectedFeedback.feedback.productDetails.brandName,
-      supplier: selectedFeedback.feedback.productDetails.supplierName
-    };
-
+      supplier: selectedFeedback.feedback.productDetails.supplierName,
+      photo: isPhoto
+    }
     return this.http.post<string>('/api/feedbacks/answer', postData);
+  }
+
+  getTemplateAnswer(): Observable<any> {
+    return this.http.get('/api/feedbacks/template');
   }
 }

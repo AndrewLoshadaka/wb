@@ -30,6 +30,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import { AnswerWindowComponent } from './answer-window/answer-window.component';
 import {MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatSelectModule} from "@angular/material/select";
 
 
 
@@ -43,34 +44,35 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     AnswerWindowComponent
 
   ],
-  imports: [
-    //RouterModule.forRoot(appRoutes),
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatSlideToggleModule,
-    FormsModule,
-    MatButtonToggleModule,
-    MatProgressSpinnerModule,
-    LayoutModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatListModule,
-    MatCardModule,
-    FlexLayoutModule,
-    MatIconModule,
-    MatExpansionModule,
-    MatPaginatorModule,
-    MatFormFieldModule,
-    MatDialogModule,
-    MatCheckboxModule,
-    MatNativeDateModule,
-    MatDatepickerModule,
-    FormsModule
-  ],
+    imports: [
+        //RouterModule.forRoot(appRoutes),
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatSlideToggleModule,
+        FormsModule,
+        MatButtonToggleModule,
+        MatProgressSpinnerModule,
+        LayoutModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatSidenavModule,
+        MatIconModule,
+        MatListModule,
+        MatCardModule,
+        FlexLayoutModule,
+        MatIconModule,
+        MatExpansionModule,
+        MatPaginatorModule,
+        MatFormFieldModule,
+        MatDialogModule,
+        MatCheckboxModule,
+        MatNativeDateModule,
+        MatDatepickerModule,
+        FormsModule,
+        MatSelectModule
+    ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'ru-RU' }
   ],

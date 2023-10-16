@@ -11,13 +11,13 @@ import {AnswerDialogComponent} from "../answer-dialog/answer-dialog.component";
 
 export class FeedbackComponent implements OnInit{
   @Input() feedback: any;
-  @Input() allChecked: boolean = false;
+  @Input() allChecked: any;
 
   @Output() toggleChange = new EventEmitter<void>();
   @Output() checkboxChange = new EventEmitter<{feedbackId: number, checked: boolean}>();
 
   isImageExpanded: boolean = false;
-  checked: boolean = this.allChecked;
+  checked: boolean = false;
   ngOnInit() {
     this.checked = this.allChecked;
   }

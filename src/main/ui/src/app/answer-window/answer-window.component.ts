@@ -13,19 +13,16 @@ export class AnswerWindowComponent {
   selectedFeedbacks;
   currentFeedbackIndex;
   answerText;
-  responseText = {
-    answer: ""
-  };
-
-
+  templates: any[] = [];
+  selectedValue: string = '';
   constructor(
       @Inject(MAT_DIALOG_DATA) public data: any,
-      private http: HttpClient,
       private dialogRef: MatDialogRef<AnswerWindowComponent>,
       private feedbacksService: FeedbacksService) {
 
     this.currentFeedbackIndex = 0;
-    this.selectedFeedbacks = data;
+    this.selectedFeedbacks = data.feedbacks;
+    this.templates = data.templates;
     this.answerText = "";
     this.getAnswer();
   }
@@ -36,6 +33,7 @@ export class AnswerWindowComponent {
     else if(this.currentFeedbackIndex == this.selectedFeedbacks.length - 1)
       this.currentFeedbackIndex = 0;
     this.getAnswer();
+    this.selectedValue = '';
   }
 
   prevPage(){
@@ -44,6 +42,7 @@ export class AnswerWindowComponent {
     else if(this.currentFeedbackIndex == 0)
       this.currentFeedbackIndex = this.selectedFeedbacks.length - 1;
     this.getAnswer();
+    this.selectedValue = '';
   }
 
   getCurrentFeedback(){
@@ -57,23 +56,30 @@ export class AnswerWindowComponent {
     } else {
       this.selectedFeedbacks.splice(this.currentFeedbackIndex, 1);
     }
+    if(this.selectedFeedbacks.length === 0) {
+      this.dialogRef.close();
+    }
   }
 
   sendResponse() {
     this.feedbacksService.sendResponse(this.selectedFeedbacks[this.currentFeedbackIndex], this.answerText);
     this.deleteItem();
     this.getAnswer();
+    this.selectedValue = '';
   }
 
   getAnswer() {
     this.feedbacksService.getAnswer(this.selectedFeedbacks[this.currentFeedbackIndex]).subscribe(
       (response) => {
-        console.log('Ok!' + response.answer);
         this.answerText = response.answer;
       },
       (error) => {
         console.log('error! ' + JSON.stringify(error));
       }
     );
+  }
+
+  getAnswerByTemplate(index: number){
+    this.answerText = this.templates[index].answer + '\nС уважением, ' + this.selectedFeedbacks[this.currentFeedbackIndex].feedback.productDetails.brandName;
   }
 }

@@ -45,13 +45,13 @@
 
       <p>
         <span>Количество звезд в отзыве</span>
-        <mat-button-toggle-group [(ngModel)]="stars" aria-label="Stars count" [(value)]="stars">
+        <mat-button-toggle-group [(ngModel)]="stars" multiple>
           <mat-button-toggle class="mat-button-toggle-valuation" value="5">5</mat-button-toggle>
           <mat-button-toggle class="mat-button-toggle-valuation" value="4">4</mat-button-toggle>
           <mat-button-toggle class="mat-button-toggle-valuation" value="3">3</mat-button-toggle>
           <mat-button-toggle class="mat-button-toggle-valuation" value="2">2</mat-button-toggle>
           <mat-button-toggle class="mat-button-toggle-valuation" value="1">1</mat-button-toggle>
-          <mat-button-toggle class="mat-button-toggle-valuation" value="">не выбрано</mat-button-toggle>
+          <!--mat-button-toggle class="mat-button-toggle-valuation" value="">не выбрано</mat-button-toggle-->
         </mat-button-toggle-group>
       </p>
 
@@ -111,7 +111,7 @@
             </div>
             <ng-container *ngFor="let feedback of currentFeedbacks">
               <form>
-                <app-feedback [feedback]="feedback" [allChecked]="allChecked" (checkboxChange)="onCheckboxChange($event)"></app-feedback>
+                <app-feedback [feedback]="feedback" [allChecked]="this.allChecked" (checkboxChange)="onCheckboxChange($event)"></app-feedback>
               </form>
             </ng-container>
 

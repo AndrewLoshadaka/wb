@@ -40,7 +40,10 @@ export class FeedbacksComponent implements AfterViewInit, OnInit {
     this.dialog.open(AnswerWindowComponent, {
       width: '1400px',
       height: '800px',
-      data: this.selectedFeedbacks
+      data: {
+        feedbacks: this.selectedFeedbacks,
+        templates: this.templates
+      }
     });
   }
 
@@ -49,10 +52,11 @@ export class FeedbacksComponent implements AfterViewInit, OnInit {
   brands: string = "";
   name = "";
   allFeedbacks: any[] = [];
+  templates: any[] = [];
 
 
   showClick: boolean = false;
-  stars = "";
+  stars: number[] = [];
   photos = "";
   video = "";
   text = "";
@@ -74,8 +78,6 @@ export class FeedbacksComponent implements AfterViewInit, OnInit {
       this.endDate = event.value.end;
     }
   }
-
-
   getBrands(){
     this.showClick = false;
     this.allBrandName = [];
@@ -119,6 +121,9 @@ export class FeedbacksComponent implements AfterViewInit, OnInit {
 
   sendAnswerOnFeedbacks() {
     this.selectedFeedbacks = this.feedbackComponents.filter(feedback => feedback.checked);
+    this.feedbacksService.getTemplateAnswer().subscribe((data: any) => {
+      this.templates = data;
+    });
     this.openModal();
   }
   onCheckboxChange (event: { feedbackId: number, checked: boolean }) {
@@ -134,17 +139,15 @@ export class FeedbacksComponent implements AfterViewInit, OnInit {
       this.selectedFeedbacks = this.currentFeedbacks;
       this.feedbackComponents.forEach((feedbackComponent) => {
         if(!feedbackComponent.checked)
-          feedbackComponent.checked = !feedbackComponent.checked;
+          feedbackComponent.setChoose();
       });
     }
     else {
       this.feedbackComponents.forEach((feedbackComponent) => {
         if(feedbackComponent.checked)
-          feedbackComponent.checked = !feedbackComponent.checked;
+          feedbackComponent.setChoose();
       });
     }
-
-    console.log(this.selectedFeedbacks.length)
   }
 
 
@@ -153,8 +156,6 @@ export class FeedbacksComponent implements AfterViewInit, OnInit {
     this.selectedFeedbacks.forEach((feedback) => {
       this.feedbacksService.getAnswer(feedback).subscribe(
         (response) => {
-          console.log('Got answer: ' + response.answer);
-
           this.feedbacksService.sendResponse(feedback, response.answer)
         },
         (error) => {
@@ -163,5 +164,4 @@ export class FeedbacksComponent implements AfterViewInit, OnInit {
       );
     });
   }
-
 }

@@ -163,7 +163,7 @@ public class FeedbacksService {
         Set<String> brandSet = new HashSet<>();
         getFeedbacks(name, dateFrom, dateTo);
         state.setPhotos("p");
-        state.setStars("p");
+        state.setStars(new String[0]);
         state.setVideo("p");
         for(Feedback x : feedbacks){
             brandSet.add(x.getProductDetails().getBrandName());
@@ -172,7 +172,7 @@ public class FeedbacksService {
         return brandSet;
     }
 
-    public List<Feedback> getAllFeedbacks(String photos, String stars, String video, String brand, String text) {
+    public List<Feedback> getAllFeedbacks(String photos, String[] stars, String video, String brand, String text) {
         /*if(state.getStars().equals(stars)
                 && state.getPhotos().equals(photos)
                 && state.getBrand().equals(brand)
@@ -191,7 +191,7 @@ public class FeedbacksService {
                         }
                     }).toList();
 
-            if (!stars.equals("")) {
+            if (stars.length != 0) {
                 feedbacksCopy = feedbackList.stream()
                         .map(v -> {
                             try {
@@ -200,7 +200,7 @@ public class FeedbacksService {
                                 throw new RuntimeException(e);
                             }
                         })
-                        .filter(v -> v.getProductValuation() == Integer.parseInt(stars))
+                        .filter(v -> Arrays.stream(stars).anyMatch(star -> v.getProductValuation() == Integer.parseInt(star)))
                         .toList();
             }
 
@@ -327,7 +327,7 @@ public class FeedbacksService {
     @Getter
     @Setter
     public class State{
-        private String stars;
+        private String[] stars;
         private String photos;
         private String brand;
         private String video;

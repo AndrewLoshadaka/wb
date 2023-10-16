@@ -28,6 +28,7 @@
   height: 150px; /* Фиксированная высота */
   resize: none; /* Отключение изменения размера */
   box-sizing: border-box; /* Учитывать границы и отступы внутри размеров */
+  background-color: #d4d4d4;
 }
 
 .modal-card {
@@ -36,7 +37,6 @@
 }
 
 .mat-card-header-wrapper {
-
   padding-left: 50px;
 }
 
@@ -56,6 +56,9 @@ mat-card{
   background: linear-gradient(to bottom, #d1d1c7, #babaaa);
 }
 
-mat-expansion-panel, textarea{
-  background-color: #d4d4d4;
+
+
+.selected-field{
+  margin-left: 50px;
+  margin-right: 50px;
 }

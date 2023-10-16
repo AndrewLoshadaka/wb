@@ -15,7 +15,7 @@ public class FeedbackController {
     private final FeedbacksService service;
     @GetMapping
     public List<Feedback> getFeedbacks(@RequestParam(value = "photos", defaultValue = "") String photos,
-                                       @RequestParam(value = "stars", defaultValue = "") String stars,
+                                       @RequestParam(value = "stars", defaultValue = "") String[] stars,
                                        @RequestParam(value = "brand", defaultValue = "") String brand,
                                        @RequestParam(value = "video", defaultValue = "") String video,
                                        @RequestParam(value = "text", defaultValue = "") String text) {
